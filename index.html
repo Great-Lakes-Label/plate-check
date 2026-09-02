@@ -167,7 +167,7 @@
 
   <header class="top">
     <h1>Plate Check</h1>
-    <span class="org">Great Lakes Label</span>
+    <span class="org">Great Lakes Label &middot; <span id="ver"></span></span>
   </header>
 
   <div id="errbar" hidden></div>
@@ -307,6 +307,7 @@
 (function(){
 "use strict";
 
+var APP_VERSION = "2026-09-02.9";   /* bump on every deploy; shown in the header and self-check */
 var TESS = {
   workerPath: "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js",
   corePath:   "https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.0",
@@ -473,15 +474,37 @@ $("filePress").addEventListener("change", function(e){
 /* ================= VERDICT ================= */
 var KIND = { changed:"Changed", missing:"Missing on press", extra:"Extra on press" };
 
-function decide(){
-  var r = window.CopyCheck.compare({ words: proof.words }, { words: press.words });
-  result = r;
+/* Words that sit inside a nutrition callout are compared by SHAPE in
+   bubbles.js, and the reader's partial text for them only adds noise to
+   the word diff. Drop them before comparing wording. Word coordinates
+   are in the OCR canvas (2600 wide over the located box); callout boxes
+   are in image coordinates, so convert.                                */
+function outsideBubbles(words, box, bubBoxes){
+  if(!box || !bubBoxes || !bubBoxes.length) return words;
+  var k = 2600 / box.w;
+  return words.filter(function(t){
+    var cx = t.x + t.w/2, cy = t.y + t.h/2;
+    return !bubBoxes.some(function(b){
+      if(!b) return false;
+      var x0=(b.x-box.x)*k, y0=(b.y-box.y)*k, x1=x0+b.w*k, y1=y0+b.h*k;
+      return cx>=x0 && cx<=x1 && cy>=y0 && cy<=y1;
+    });
+  });
+}
 
+function decide(){
   bubbles = null;
   if(window.BubbleCheck && proof.box && press.box){
     try { bubbles = window.BubbleCheck.compare(proof.img, proof.box, press.img, press.box); }
     catch(e){ bubbles = null; }
   }
+  var pWords = proof.words, sWords = press.words;
+  if(bubbles){
+    pWords = outsideBubbles(pWords, proof.box, bubbles.bubbles.map(function(e){ return e.proofBox; }));
+    sWords = outsideBubbles(sWords, press.box, bubbles.bubbles.map(function(e){ return e.pressBox; }));
+  }
+  var r = window.CopyCheck.compare({ words: pWords }, { words: sWords });
+  result = r;
   var bubDiff = bubbles ? bubbles.bubbles.filter(function(b){ return b.status==="differs"; }).length : 0;
   var bubUnres = bubbles ? bubbles.bubbles.filter(function(b){ return b.status==="unresolved"; }).length : 0;
 
@@ -616,6 +639,7 @@ function record(verdict, diffs){
 }
 
 /* ================= SELF-CHECK ================= */
+$("ver").textContent = "v" + APP_VERSION;
 (function(){
   var host = $("diagList"), panel = $("diag"), bad = false;
   function row(state, text){
@@ -623,6 +647,7 @@ function record(verdict, diffs){
     li.innerHTML = "<span>" + (state==="ok" ? "\u2713" : state==="bad" ? "\u2717" : "!") + "</span><span>" + esc(text) + "</span>";
     host.appendChild(li); if(state==="bad") bad = true;
   }
+  row("ok", "App version " + APP_VERSION + " — if this is not the version you just uploaded, Safari is serving a cached copy; add ?v=" + Date.now().toString().slice(-4) + " to the address.");
   var p = location.protocol;
   row(p==="file:" ? "bad" : "ok", p==="file:"
     ? "Opened as a local file. Serve over https — GitHub Pages works."

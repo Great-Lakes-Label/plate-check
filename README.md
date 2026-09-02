@@ -55,6 +55,17 @@ so the whole photo is read instead and results degrade.
 90 degrees from how they display. The app corrects this. If the self-check warns that orientation
 handling is unavailable on an old browser, hold the device upright when shooting.
 
+## Two things about the browser OCR library, learned the hard way
+
+**Test against the real library.** Tesseract.js in Safari reads slightly differently from the
+command-line Tesseract, and every threshold in this app was finally tuned by running the actual
+Tesseract.js library in Node against real GLL photos. The approval-section read, for example,
+needed 3400px width rather than 2600 before the small "Product Number:" field read reliably.
+
+**Tesseract.js output shape.** Word data comes back nested (`data.blocks → paragraphs → lines →
+words`) and is flattened to `data.words` by the library. `pipeline.js` reads either form and
+falls back to parsing `data.tsv`, so a library update cannot silently empty the results.
+
 ## Reading by colour band
 
 Contrast stretching across a whole label is dominated by its largest area — on these labels

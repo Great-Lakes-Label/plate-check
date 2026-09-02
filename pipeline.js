@@ -27,6 +27,10 @@ window.PlatePipeline = (function(){
 "use strict";
 
 var WORK_W   = 2600;  // OCR working width for a crop
+var SECT_W   = 3400;  /* approval section is read wider: the "Product Number:"
+                         field is small type and at 2600 the 8 in 9813961 read
+                         as a 2 or 3 in every channel. At 3400 both blocks read
+                         correctly. Measured against the real Tesseract.js. */
 var CONF_MIN = 60;    // reader confidence floor for copy tokens
 var CONF_CAP = 50;    // lower floor when hunting the item caption (highlighter dims it)
 var ITEM_RE  = /^\d{2}[-\u2013\u2014.\s]?\d{7}"?$/;
@@ -154,20 +158,53 @@ function getWorker(tess, paths){
   return workerReady;
 }
 
+/* Tesseract.js v5 does NOT return a top-level `words` array. Words are
+   nested: data.blocks[].paragraphs[].lines[].words[]. Earlier versions
+   exposed data.words directly. Handle both, and as a last resort parse
+   the TSV, so a library update can never silently empty the results. */
+function flattenWords(data){
+  var out = [];
+  if(!data) return out;
+  if(Array.isArray(data.words) && data.words.length) return data.words;
+  if(Array.isArray(data.blocks)){
+    data.blocks.forEach(function(b){
+      (b.paragraphs||[]).forEach(function(p){
+        (p.lines||[]).forEach(function(l){
+          (l.words||[]).forEach(function(w){ out.push(w); });
+        });
+      });
+    });
+    if(out.length) return out;
+  }
+  if(typeof data.tsv === "string"){
+    data.tsv.split("\n").slice(1).forEach(function(line){
+      var c = line.split("\t");
+      if(c.length < 12) return;
+      var conf = parseFloat(c[10]);
+      if(isNaN(conf) || conf < 0) return;
+      out.push({ text:c[11], confidence:conf,
+                 bbox:{ x0:+c[6], y0:+c[7], x1:+c[6]+ +c[8], y1:+c[7]+ +c[9] } });
+    });
+  }
+  return out;
+}
+
 /* read a canvas on the requested channels, return raw word boxes */
 function readCanvas(tess, paths, canvas, channels, minConf, onProgress){
   return getWorker(tess, paths).then(function(w){
     var all = [], chain = Promise.resolve(), done = 0;
     channels.forEach(function(ch){
       chain = chain.then(function(){
-        return w.recognize(channel(canvas, ch)).then(function(res){
-          var words = (res.data && res.data.words) || [];
-          words.forEach(function(wd){
+        return w.recognize(channel(canvas, ch), {}, { blocks:true, text:true, tsv:true, hocr:false })
+        .then(function(res){
+          flattenWords(res.data).forEach(function(wd){
             var t = String(wd.text||"").trim();
             if(!t || wd.confidence < minConf) return;
             var b = wd.bbox || {};
+            var alts = (wd.choices||[]).map(function(c){ return String(c.text||"").trim(); }).filter(Boolean);
             all.push({ text:t, confidence:wd.confidence,
-                       x:b.x0|0, y:b.y0|0, w:((b.x1-b.x0)|0)||1, h:((b.y1-b.y0)|0)||1, ch:ch });
+                       x:b.x0|0, y:b.y0|0, w:((b.x1-b.x0)|0)||1, h:((b.y1-b.y0)|0)||1, ch:ch,
+                       choices:alts });
           });
           done++; if(onProgress) onProgress(done/channels.length);
         });
@@ -263,17 +300,32 @@ function merge(raw){
       var o = out[j], ox = o.x+o.w/2, oy = o.y+o.h/2;
       if(Math.abs(cx-ox) < Math.max(w.w,o.w)*0.5 && Math.abs(cy-oy) < Math.max(w.h,o.h)*0.7){ hit=o; break; }
     }
+    var mine = [w.text].concat(w.choices||[]);
     if(hit){
-      if(hit.alts.indexOf(w.text) === -1) hit.alts.push(w.text);
+      mine.forEach(function(a){ if(a && hit.alts.indexOf(a) === -1) hit.alts.push(a); });
       hit.reads.push(w);
     } else {
       out.push({ text:w.text, confidence:w.confidence, x:w.x, y:w.y, w:w.w, h:w.h,
-                 alts:[w.text], reads:[w] });
+                 alts:mine.filter(function(a,i,arr){ return a && arr.indexOf(a)===i; }), reads:[w] });
     }
   }
+  /* Choose the primary reading for each slot: the text that most passes
+     agreed on; ties broken by confidence, then by length. Pure "longest
+     wins" let a single channel's confident hallucination ("Lightly" read
+     over "sodium") outrank two channels that agreed on the right word. */
   out.forEach(function(o){
-    var top = o.reads[0].confidence, best = o.text;
-    o.reads.forEach(function(r){ if(r.confidence >= top-5 && r.text.length > best.length) best = r.text; });
+    var tally = {};
+    o.reads.forEach(function(r){
+      var k = r.text;
+      if(!tally[k]) tally[k] = { n:0, conf:0, len:k.length };
+      tally[k].n++; if(r.confidence > tally[k].conf) tally[k].conf = r.confidence;
+      (r.choices||[]).forEach(function(c){ if(c && !tally[c]) tally[c] = { n:0, conf:0, len:c.length }; });
+    });
+    var best = o.text, b = tally[best] || { n:0, conf:0, len:best.length };
+    Object.keys(tally).forEach(function(k){
+      var t = tally[k];
+      if(t.n > b.n || (t.n === b.n && t.conf > b.conf) || (t.n === b.n && t.conf === b.conf && t.len > b.len)){ best = k; b = t; }
+    });
     o.text = best;
     delete o.reads;
   });
@@ -388,7 +440,9 @@ function findArtworks(img, paper, limitFrac){
    block. Blocks are grouped by line, ordered top to bottom, and every
    channel's reading of the number is kept as a candidate.              */
 function approvalBlocks(raw){
-  var anchors = raw.filter(function(r){ return /^PRODUCT/i.test(r.text); });
+  /* "Product Number:" — either word anchors the line. A highlighter over the
+     field routinely costs the reader one of the two words. */
+  var anchors = raw.filter(function(r){ return /^(PRODUCT|NUMBER)/i.test(r.text); });
   var nums = raw.filter(function(r){ return ITEM_RE.test(r.text.replace(/\s+/g,"")); });
   var blocks = [];
   anchors.forEach(function(a){
@@ -466,8 +520,8 @@ function readProof(tess, paths, img, item, onProgress){
   var paper = findPaper(img);
   // approval section: lower half of the paper, read on three channels
   var sec = { x:paper.x, y:paper.y + paper.h*0.5, w:paper.w, h:paper.h*0.5 };
-  var secCanvas = fit(img, sec, WORK_W);
-  return readCanvas(tess, paths, secCanvas, ["gray","green","red"], 0, function(p){ if(onProgress) onProgress(p*0.35); })
+  var secCanvas = fit(img, sec, SECT_W);
+  return readCanvas(tess, paths, secCanvas, ["gray","green"], 0, function(p){ if(onProgress) onProgress(p*0.35); })
     .then(function(raw){
       var blocks = approvalBlocks(raw);
       var onSheet = blocks.map(function(b){ return b.best.conf >= 50 ? b.best.digits : null; }).filter(Boolean);
@@ -495,6 +549,29 @@ function readProof(tess, paths, img, item, onProgress){
                    box:box, blockIndex:k, artworks:arts.length, blocks:blocks.length };
         });
     });
+}
+
+/* Multi-across web in frame: the same long word appears several times at
+   widely separated positions. Comparing that against a single proof
+   artwork would report every repeat as extra copy, so it is refused. */
+function multiLabel(words){
+  var byText = {}, i, t;
+  for(i=0;i<words.length;i++){
+    t = words[i].text.toUpperCase();
+    if(t.length < 6 || /\d/.test(t)) continue;
+    (byText[t] = byText[t] || []).push(words[i]);
+  }
+  var keys = Object.keys(byText), k, list, xs, ys, spanX, spanY, maxW;
+  for(k=0;k<keys.length;k++){
+    list = byText[keys[k]];
+    if(list.length < 3) continue;
+    xs = list.map(function(w){ return w.x; }); ys = list.map(function(w){ return w.y; });
+    maxW = Math.max.apply(null, list.map(function(w){ return w.w; }));
+    spanX = Math.max.apply(null,xs) - Math.min.apply(null,xs);
+    spanY = Math.max.apply(null,ys) - Math.min.apply(null,ys);
+    if(spanX > maxW*2 || spanY > maxW*2) return true;
+  }
+  return false;
 }
 
 /* ================= public: read a press sample ================= */

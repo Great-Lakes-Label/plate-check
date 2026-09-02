@@ -31,7 +31,9 @@ window.CopyCheck = (function(){
 var MIN_CONF = 60;      // drop words the reader was not confident about
 var CONF_NUM = 85;      // a numeric conflict needs more confidence than a word
 var MIN_LEN  = 2;       // ignore stray single characters
-var CONF_EXTRA   = 88;  // extra word on the press: this confident to be reported
+var CONF_EXTRA   = 88;  // extra PHRASE on the press: this confident to be reported
+var CONF_SINGLE  = 92;  // a lone extra word needs more: logos and stylised type
+                        // read on one side and not the other at ~90
 var CONF_MISSING = 95;  // word missing from press: near-perfect proof read required,
                         // because the press photo is the weaker reader
 var LEN_SOLO     = 5;   // ...and this long, so fragments never qualify
@@ -201,22 +203,26 @@ function findings(ops){
          are promoted; the rest stay counted as unverified. */
       var side = minus.length ? minus : plus;
       var floor = minus.length ? CONF_MISSING : CONF_EXTRA;
+      /* the merge step has already chosen the best display reading per
+         slot (by vote, confidence, then length) — use it as-is */
       var solid = side.filter(function(t){
-        /* judge on the longest candidate reading, not the primary */
-        var best = (t.alts||[t.t]).reduce(function(a,b){ return b.length>a.length?b:a; }, t.t);
-        return !t.num && t.conf >= floor && best.length >= LEN_SOLO && /[AEIOUY]/.test(best);
-      }).map(function(t){
-        var best = (t.alts||[t.t]).reduce(function(a,b){ return b.length>a.length?b:a; }, t.t);
-        return { t:best, conf:t.conf };
-      });
+        return !t.num && t.conf >= floor && t.t.length >= LEN_SOLO && /[AEIOUY]/.test(t.t);
+      }).map(function(t){ return { t:t.t, conf:t.conf }; });
+      if(solid.length === 1 && solid[0].conf < CONF_SINGLE) solid = [];
       if(solid.length){
         /* Two or more confident real words in one run is a phrase, not
            speckle — report the WHOLE run so the operator sees the line as
            printed (numbers and short words included). A single confident
-           word is reported alone. */
+           word is reported alone. Fragments that are substrings of a
+           neighbouring word in the run (GHTLY beside LIGHTLY) are dropped. */
         var shown = solid.length >= 2
-          ? side.map(function(t){ return (t.alts||[t.t]).reduce(function(a,b){ return b.length>a.length?b:a; }, t.t); })
+          ? side.map(function(t){ return t.t; })
           : solid.map(function(t){return t.t;});
+        shown = shown.filter(function(w, i, arr){
+          if(w.length < 4) return true;
+          var prev = arr[i-1]||"", next = arr[i+1]||"";
+          return !((prev.length>w.length && prev.indexOf(w)!==-1) || (next.length>w.length && next.indexOf(w)!==-1));
+        });
         var txt = shown.join(" ");
         out.push(minus.length
           ? { kind:"missing", proof:txt, press:"", numeric:false, conf:solid[0].conf }
