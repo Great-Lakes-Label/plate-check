@@ -10,165 +10,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --console:#05294A;
-    --gll:#005395;
-    --gold:#E0A22E;
-    --go:#0B7A3B;
-    --stop:#C41E1E;
-    --hold:#B77605;
-    --ink:#14202C;
-    --slate:#5F6E7C;
-    --steel:#C9D2DA;
-    --card:#F1F4F7;
-    --paper:#FFFFFF;
+    --console:#05294A; --gll:#005395; --gold:#E0A22E;
+    --go:#0B7A3B; --stop:#C41E1E; --hold:#B77605;
+    --ink:#14202C; --slate:#5F6E7C; --steel:#C9D2DA;
+    --card:#F1F4F7; --paper:#FFFFFF;
     --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
     --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
     --disp:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0}
-  body{
-    font-family:var(--sans);color:var(--ink);background:var(--card);
-    -webkit-text-size-adjust:100%;padding-bottom:env(safe-area-inset-bottom);
-  }
+  body{font-family:var(--sans);color:var(--ink);background:var(--card);
+       -webkit-text-size-adjust:100%;padding-bottom:env(safe-area-inset-bottom)}
   .wrap{max-width:560px;margin:0 auto;background:var(--paper);min-height:100vh}
 
-  .top{
-    background:var(--console);color:#fff;padding:14px 18px;
-    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-  }
-  .top h1{
-    font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:.06em;
-    text-transform:uppercase;margin:0;line-height:1;
-  }
-  .top .org{
-    font-family:var(--mono);font-size:10px;letter-spacing:.16em;
-    text-transform:uppercase;opacity:.72;white-space:nowrap;
-  }
+  .top{background:var(--console);color:#fff;padding:14px 18px;
+       display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .top h1{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:.06em;
+          text-transform:uppercase;margin:0;line-height:1}
+  .top .org{font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+            text-transform:uppercase;opacity:.72;white-space:nowrap}
 
-  .step{padding:20px 18px;border-bottom:1px solid var(--steel)}
-  .step.locked{opacity:.45;pointer-events:none}
-  .eyebrow{
-    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--gll);margin:0 0 12px;
-  }
-  .eyebrow b{color:var(--slate);font-weight:500}
-
-  .lead{
-    font-family:var(--disp);font-weight:600;font-size:22px;line-height:1.12;
-    letter-spacing:.01em;margin:0 0 14px;color:var(--ink);
-  }
-  label.fld{display:block;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--slate);margin:0 0 6px}
-  .row{display:flex;gap:10px}
-  input[type=text]{
-    display:block;width:100%;font-family:var(--mono);font-size:22px;font-weight:500;
-    padding:14px 12px;border:2px solid var(--steel);border-radius:6px;background:#fff;color:var(--ink);
-  }
-  input[type=text]:focus{outline:3px solid var(--gll);outline-offset:1px;border-color:var(--gll)}
-
-  button{font-family:inherit;cursor:pointer;border:0;border-radius:6px}
-  button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-  .btn-submit{
-    background:var(--gll);color:#fff;font-weight:600;font-size:16px;
-    padding:15px 26px;letter-spacing:.02em;
-  }
-  .btn-submit.wide{display:block;width:100%;margin-top:18px}
-  .sub-help{font-size:12px;color:var(--slate);margin:6px 0 0;line-height:1.4}
-  .btn-submit:disabled{background:var(--steel);cursor:default}
-
-  /* the action the operator should take right now */
-  .btn-act{
-    display:block;width:100%;background:var(--console);color:#fff;
-    font-family:var(--disp);font-weight:700;font-size:25px;letter-spacing:.06em;
-    text-transform:uppercase;padding:24px 16px;
-  }
-  .btn-act.hot{
-    background:var(--gold);color:#2B1D00;
-    box-shadow:0 0 0 4px rgba(224,162,46,.28);
-  }
-  .btn-act:disabled{background:var(--steel);color:#fff;box-shadow:none;cursor:default}
-  .btn-act + .btn-act{margin-top:12px}
-  .btn-min{background:none;border:2px solid var(--steel);color:var(--slate);font-size:13px;font-weight:600;padding:9px 14px}
-
-  .target{margin-top:14px;background:var(--card);border-left:4px solid var(--gll);padding:12px 14px}
-  .target dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline}
-  .target dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
-  .target dd{margin:0;font-family:var(--mono);font-size:17px;font-weight:700}
-  .target .desc{font-family:var(--sans);font-size:15px;font-weight:600}
-
-  .note{font-size:13px;line-height:1.5;color:var(--slate);margin:12px 0 0}
-  .note.warn{color:var(--stop);font-weight:600}
-
-  .shot{margin-top:16px;display:none;touch-action:none}
-  .shot.on{display:block}
-  .shot canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
-  .shot .hint{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);margin:8px 0 0;line-height:1.5}
-  .shot .tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-  .picks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-  .pick{
-    display:flex;align-items:center;gap:8px;text-align:left;
-    background:#fff;border:2px solid var(--steel);color:var(--slate);
-    font-size:13px;font-weight:600;padding:11px 10px;line-height:1.25;
-  }
-  .pick.armed{border-color:var(--gold);background:#FFFBF2;color:var(--ink)}
-  .pick.done{border-color:var(--go);color:var(--ink)}
-  .pick em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--go);margin-left:auto}
-  .sw{width:12px;height:12px;border-radius:2px;flex:0 0 auto}
-  .sw-p{background:var(--gll)} .sw-s{background:var(--gold)}
-
-  .findings{padding:0 18px 24px}
-  .findings canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0;font-size:12px;color:var(--slate)}
-  .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-2px}
-  .legend .k-copy{border:2px solid var(--stop)}
-  .legend .k-col{background:rgba(224,162,46,.55)}
-  .flist{margin:14px 0 0;padding:0;list-style:none}
-  .flist li{font-size:13px;line-height:1.5;padding:8px 0;border-bottom:1px solid var(--card);display:flex;gap:10px}
-  .flist li b{font-family:var(--mono);font-size:12px;color:var(--gll);flex:0 0 62px}
-  .disclaim{font-size:12px;line-height:1.5;color:var(--slate);margin:16px 0 0;
-            border-left:3px solid var(--steel);padding-left:10px}
-
-  .slab{display:none;color:#fff}
-  .slab.on{display:block}
-  .slab .bar{height:10px}
-  .slab .body{padding:22px 18px 24px}
-  .slab .call{font-family:var(--disp);font-weight:700;font-size:46px;line-height:.92;letter-spacing:.03em;text-transform:uppercase;margin:0 0 4px}
-  .slab .sub{font-size:14px;line-height:1.45;margin:0;opacity:.94}
-  .cmp{margin:18px 0 0;border-top:1px solid rgba(255,255,255,.28)}
-  .cmp div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.28)}
-  .cmp dt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8;margin:0}
-  .cmp dd{font-family:var(--mono);font-size:26px;font-weight:700;margin:0;text-align:right;word-break:break-all}
-  .slab.is-go{background:var(--go)}   .slab.is-go .bar{background:#064d25}
-  .slab.is-stop{background:var(--stop)}
-  .slab.is-stop .bar{background:repeating-linear-gradient(45deg,#1a1a1a 0 14px,#F2C200 14px 28px)}
-  .slab.is-hold{background:var(--hold)} .slab.is-hold .bar{background:#7d5104}
-  .slab .again{margin:18px 0 0}
-
-  .prog{display:none;padding:18px;background:var(--card);border-bottom:1px solid var(--steel)}
-  .prog.on{display:block}
-  .prog p{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin:0 0 8px}
-  .prog .track{height:6px;background:var(--steel);border-radius:3px;overflow:hidden}
-  .prog .fill{height:100%;width:0;background:var(--gll);transition:width .25s ease}
-
-  .log{padding:20px 18px 34px}
-  .log table{width:100%;border-collapse:collapse}
-  .log th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);text-align:left;font-weight:700;padding:0 8px 8px 0;border-bottom:2px solid var(--steel)}
-  .log td{font-size:13px;padding:9px 8px 9px 0;border-bottom:1px solid var(--card);vertical-align:top}
-  .log td.c{font-family:var(--mono);font-size:13px;font-weight:700}
-  .log .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 6px;border-radius:3px;color:#fff;white-space:nowrap}
-  .tag.go{background:var(--go)} .tag.stop{background:var(--stop)} .tag.hold{background:var(--hold)}
-  .log .empty{font-size:13px;color:var(--slate);margin:0;line-height:1.5}
-  .log .foot{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-
-  #errbar{
-    background:var(--stop);color:#fff;padding:12px 18px;font-family:var(--mono);
-    font-size:12px;line-height:1.5;word-break:break-word;
-  }
+  #errbar{background:var(--stop);color:#fff;padding:12px 18px;font-family:var(--mono);
+          font-size:12px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
   #diag{border-bottom:1px solid var(--steel);font-size:13px}
-  #diag summary{
-    padding:10px 18px;cursor:pointer;font-family:var(--mono);font-size:11px;
-    letter-spacing:.12em;text-transform:uppercase;color:var(--slate);
-  }
+  #diag summary{padding:10px 18px;cursor:pointer;font-family:var(--mono);font-size:11px;
+                letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
   #diag[data-bad="1"] summary{color:var(--stop);font-weight:700}
   #diag ul{margin:0;padding:0 18px 14px;list-style:none}
   #diag li{padding:5px 0;border-bottom:1px solid var(--card);display:flex;gap:8px;line-height:1.4}
@@ -176,6 +43,105 @@
   #diag li.ok span:first-child{color:var(--go)}
   #diag li.bad span:first-child{color:var(--stop)}
   #diag li.warn span:first-child{color:var(--hold)}
+
+  .step{padding:20px 18px;border-bottom:1px solid var(--steel)}
+  .step.locked{opacity:.42;pointer-events:none}
+  .eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;
+           text-transform:uppercase;color:var(--gll);margin:0 0 12px}
+  .eyebrow b{color:var(--slate);font-weight:500}
+  .lead{font-family:var(--disp);font-weight:600;font-size:22px;line-height:1.12;
+        margin:0 0 14px;color:var(--ink)}
+
+  label.fld{display:block;font-family:var(--mono);font-size:13px;font-weight:700;
+            letter-spacing:.08em;color:var(--slate);margin:0 0 6px}
+  input[type=text]{display:block;width:100%;font-family:var(--mono);font-size:22px;font-weight:500;
+    padding:14px 12px;border:2px solid var(--steel);border-radius:6px;background:#fff;color:var(--ink)}
+  input[type=text]:focus{outline:3px solid var(--gll);outline-offset:1px;border-color:var(--gll)}
+  .sub-help{font-size:12px;color:var(--slate);margin:6px 0 0;line-height:1.4}
+
+  button{font-family:inherit;cursor:pointer;border:0;border-radius:6px}
+  button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .btn-submit{background:var(--gll);color:#fff;font-weight:600;font-size:16px;
+              padding:15px 26px;letter-spacing:.02em;display:block;width:100%;margin-top:18px}
+  .btn-act{display:block;width:100%;background:var(--console);color:#fff;
+    font-family:var(--disp);font-weight:700;font-size:25px;letter-spacing:.06em;
+    text-transform:uppercase;padding:24px 16px}
+  .btn-act.hot{background:var(--gold);color:#2B1D00;box-shadow:0 0 0 4px rgba(224,162,46,.28)}
+  .btn-act:disabled{background:var(--steel);color:#fff;box-shadow:none;cursor:default}
+  .btn-act + .btn-act{margin-top:12px}
+  .btn-min{background:none;border:2px solid var(--steel);color:var(--slate);
+           font-size:13px;font-weight:600;padding:9px 14px}
+
+  .target{margin-top:14px;background:var(--card);border-left:4px solid var(--gll);padding:12px 14px}
+  .target dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline}
+  .target dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+             text-transform:uppercase;color:var(--slate)}
+  .target dd{margin:0;font-family:var(--mono);font-size:17px;font-weight:700}
+  .target .desc{font-family:var(--sans);font-size:15px;font-weight:600}
+
+  .note{font-size:13px;line-height:1.5;color:var(--slate);margin:12px 0 0}
+  .note.warn{color:var(--stop);font-weight:600}
+  .note.good{color:var(--go);font-weight:600}
+
+  .shot{margin-top:16px;display:none;touch-action:none}
+  .shot.on{display:block}
+  .shot canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
+  .hint{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+        color:var(--slate);margin:8px 0 0;line-height:1.5}
+  .tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+  .slab{display:none;color:#fff}
+  .slab.on{display:block}
+  .slab .bar{height:10px}
+  .slab .body{padding:22px 18px 24px}
+  .slab .call{font-family:var(--disp);font-weight:700;font-size:46px;line-height:.92;
+              letter-spacing:.03em;text-transform:uppercase;margin:0 0 4px}
+  .slab .sub{font-size:14px;line-height:1.45;margin:0;opacity:.94}
+  .cmp{margin:18px 0 0;border-top:1px solid rgba(255,255,255,.28)}
+  .cmp div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+           padding:11px 0;border-bottom:1px solid rgba(255,255,255,.28)}
+  .cmp dt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+          text-transform:uppercase;opacity:.8;margin:0}
+  .cmp dd{font-family:var(--mono);font-size:22px;font-weight:700;margin:0;
+          text-align:right;word-break:break-all}
+  .slab.is-go{background:var(--go)}    .slab.is-go .bar{background:#064d25}
+  .slab.is-stop{background:var(--stop)}
+  .slab.is-stop .bar{background:repeating-linear-gradient(45deg,#1a1a1a 0 14px,#F2C200 14px 28px)}
+  .slab.is-hold{background:var(--hold)} .slab.is-hold .bar{background:#7d5104}
+  .slab .again{margin:18px 0 0}
+
+  .prog{display:none;padding:18px;background:var(--card);border-bottom:1px solid var(--steel)}
+  .prog.on{display:block}
+  .prog p{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+          color:var(--slate);margin:0 0 8px}
+  .prog .track{height:6px;background:var(--steel);border-radius:3px;overflow:hidden}
+  .prog .fill{height:100%;width:0;background:var(--gll);transition:width .25s ease}
+
+  .findings{padding:0 18px 24px}
+  .findings canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0;font-size:12px;color:var(--slate)}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;
+            margin-right:6px;vertical-align:-2px;border:2px solid var(--stop)}
+  .flist{margin:14px 0 0;padding:0;list-style:none}
+  .flist li{font-size:13px;line-height:1.5;padding:8px 0;
+            border-bottom:1px solid var(--card);display:flex;gap:10px}
+  .flist li b{font-family:var(--mono);font-size:12px;color:var(--gll);flex:0 0 76px}
+  .disclaim{font-size:12px;line-height:1.5;color:var(--slate);margin:16px 0 0;
+            border-left:3px solid var(--steel);padding-left:10px}
+
+  .log{padding:20px 18px 34px}
+  .log table{width:100%;border-collapse:collapse}
+  .log th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+          color:var(--slate);text-align:left;font-weight:700;
+          padding:0 8px 8px 0;border-bottom:2px solid var(--steel)}
+  .log td{font-size:13px;padding:9px 8px 9px 0;border-bottom:1px solid var(--card);vertical-align:top}
+  .log td.c{font-family:var(--mono);font-size:13px;font-weight:700}
+  .log .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;
+            padding:3px 6px;border-radius:3px;color:#fff;white-space:nowrap}
+  .tag.go{background:var(--go)} .tag.stop{background:var(--stop)} .tag.hold{background:var(--hold)}
+  .log .empty{font-size:13px;color:var(--slate);margin:0;line-height:1.5}
+  .log .foot{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -197,7 +163,7 @@
 
   <!-- STEP 1 -->
   <section class="step" id="s1">
-    <p class="eyebrow">Step 1</p>
+    <p class="eyebrow">Step 1 <b>&mdash; Job</b></p>
 
     <label class="fld" for="job">Job #</label>
     <input type="text" id="job" inputmode="numeric" autocomplete="off" placeholder="Enter Job #">
@@ -207,13 +173,13 @@
            placeholder="Enter Item #" aria-describedby="itemhelp">
     <p class="sub-help" id="itemhelp">As shown on the Art Proof Approval</p>
 
-    <button class="btn-submit wide" id="submit">Submit</button>
+    <button class="btn-submit" id="submit">Submit</button>
 
     <div id="target" class="target" hidden>
       <dl>
-        <dt>Artwork code</dt><dd id="tCode">—</dd>
-        <dt>Descriptor</dt><dd class="desc" id="tDesc">—</dd>
-        <dt>Customer</dt><dd class="desc" id="tCust">—</dd>
+        <dt>Item #</dt><dd id="tItem">&mdash;</dd>
+        <dt>Descriptor</dt><dd class="desc" id="tDesc">&mdash;</dd>
+        <dt>Customer</dt><dd class="desc" id="tCust">&mdash;</dd>
       </dl>
     </div>
     <p class="note" id="jobmsg"></p>
@@ -221,48 +187,44 @@
 
   <!-- STEP 2 -->
   <section class="step locked" id="s2">
-    <p class="eyebrow">Step 2</p>
-    <p class="lead">Line up press sample next to Art Proof Approval</p>
-    <button class="btn-act" id="shoot" disabled>Photograph label</button>
-    <input type="file" id="file" accept="image/*" capture="environment" class="sr">
+    <p class="eyebrow">Step 2 <b>&mdash; Proof</b></p>
+    <p class="lead">Photograph the PDF proof</p>
+    <button class="btn-act" id="shootProof" disabled>Photograph proof</button>
+    <input type="file" id="fileProof" accept="image/*" capture="environment" class="sr">
 
-    <div class="shot" id="shot">
-      <canvas id="cv"></canvas>
-      <p class="hint" id="cropHint">Box the artwork on the proof, then box the label off the press.</p>
-      <div class="picks">
-        <button class="pick" id="pickProof" data-mode="proof">
-          <span class="sw sw-p"></span>1 &middot; Proof artwork <em id="okProof"></em>
-        </button>
-        <button class="pick" id="pickPress" data-mode="press">
-          <span class="sw sw-s"></span>2 &middot; Press sample <em id="okPress"></em>
-        </button>
-      </div>
+    <div class="shot" id="shotProof">
+      <canvas id="cvProof"></canvas>
+      <p class="hint" id="hintProof">Checking the item number&hellip;</p>
       <div class="tools">
-        <button class="btn-min" id="clearsel">Clear boxes</button>
-        <button class="btn-min" id="retake">Retake photo</button>
+        <button class="btn-min" id="clearProof">Clear box</button>
+        <button class="btn-min" id="retakeProof">Retake</button>
+      </div>
+    </div>
+    <p class="note" id="proofmsg"></p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step locked" id="s3">
+    <p class="eyebrow">Step 3 <b>&mdash; Press sample</b></p>
+    <p class="lead">Photograph the label off the press</p>
+    <button class="btn-act" id="shootPress" disabled>Photograph press sample</button>
+    <input type="file" id="filePress" accept="image/*" capture="environment" class="sr">
+
+    <div class="shot" id="shotPress">
+      <canvas id="cvPress"></canvas>
+      <p class="hint" id="hintPress">Drag a box around one label &mdash; box the same edges you used on the proof.</p>
+      <div class="tools">
+        <button class="btn-min" id="clearPress">Clear box</button>
+        <button class="btn-min" id="retakePress">Retake</button>
       </div>
       <button class="btn-act" id="validate">Validate for accuracy</button>
     </div>
-
-    <div class="findings" id="findings" hidden>
-      <p class="eyebrow" style="margin-top:22px">Differences found</p>
-      <canvas id="out"></canvas>
-      <div class="legend">
-        <span><i class="k-copy"></i>Copy difference</span>
-        <span><i class="k-col"></i>Colour deviation (relative)</span>
-      </div>
-      <ul class="flist" id="flist"></ul>
-      <p class="disclaim">Colour here is a relative comparison between the two items in this one
-      photo. The Art Proof Approval is not a colour standard and this is not a delta-E measurement.
-      Confirm colour with a spectrophotometer against the job standard.</p>
-    </div>
-
-    <p class="note" id="shotmsg"></p>
+    <p class="note" id="pressmsg"></p>
   </section>
 
   <!-- PROGRESS -->
   <div class="prog" id="prog" aria-live="polite">
-    <p id="progTxt">Reading label</p>
+    <p id="progTxt">Working</p>
     <div class="track"><div class="fill" id="progFill"></div></div>
   </div>
 
@@ -273,30 +235,38 @@
       <p class="call" id="call"></p>
       <p class="sub" id="sub"></p>
       <dl class="cmp">
-        <div><dt>Item # entered</dt><dd id="cItem">—</dd></div>
-        <div><dt>On proof sheet</dt><dd id="cExp">—</dd></div>
-        <div><dt>Artwork codes</dt><dd id="cGot">—</dd></div>
+        <div><dt>Item #</dt><dd id="cItem">&mdash;</dd></div>
+        <div><dt>On proof</dt><dd id="cProof">&mdash;</dd></div>
+        <div><dt>Copy regions differing</dt><dd id="cDiff">&mdash;</dd></div>
       </dl>
-      <div class="again"><button class="btn-min" id="next" style="border-color:rgba(255,255,255,.6);color:#fff">Start next check</button></div>
+      <div class="again">
+        <button class="btn-min" id="next"
+                style="border-color:rgba(255,255,255,.6);color:#fff">Start next check</button>
+      </div>
     </div>
+  </section>
+
+  <!-- FINDINGS -->
+  <section class="findings" id="findings" hidden>
+    <p class="eyebrow" style="margin-top:22px">Differences found</p>
+    <canvas id="out"></canvas>
+    <div class="legend"><span><i></i>Copy difference</span></div>
+    <ul class="flist" id="flist"></ul>
+    <p class="disclaim">This compares copy only &mdash; text, layout and structure. Colour is not
+    evaluated: the Art Proof Approval is not a colour standard. Verify colour separately against
+    the job standard.</p>
   </section>
 
   <!-- LOG -->
   <section class="log">
-    <p class="eyebrow">Check log <b id="qbadge" hidden style="text-transform:none;letter-spacing:0;font-weight:600"></b></p>
+    <p class="eyebrow">Check log
+      <b id="qbadge" hidden style="text-transform:none;letter-spacing:0;font-weight:600"></b></p>
     <div id="logBody"><p class="empty">No checks recorded yet.</p></div>
-    <div class="foot">
-      <button class="btn-min" id="csv">Export to CSV</button>
-    </div>
+    <div class="foot"><button class="btn-min" id="csv">Export to CSV</button></div>
   </section>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<!-- Uncomment only for MODE "graph" in sync.js -->
-<!-- <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script> -->
-<script src="compare.js"></script>
-<script src="sync.js"></script>
 <script>
 /* ---- surface errors on screen: the iPad has no console ---- */
 (function(){
@@ -309,7 +279,7 @@
   window.addEventListener("error", function(e){
     if(e.target && e.target.tagName === "SCRIPT"){
       show("Could not load script: " + (e.target.src || "?") +
-           "  \u2014 check the shop network or firewall.");
+           " — check the shop network or firewall.");
       return;
     }
     show("Error: " + (e.message || "unknown") +
@@ -318,83 +288,85 @@
   window.addEventListener("unhandledrejection", function(e){
     show("Error: " + ((e.reason && (e.reason.message || e.reason)) || "request failed"));
   });
-  window.__diagShow = show;
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="compare.js"></script>
+<!-- Uncomment only for MODE "graph" in sync.js -->
+<!-- <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script> -->
+<script src="sync.js"></script>
 <script>
 (function(){
 "use strict";
 
-var DEFAULT_CODE_LEN = 6;
-
-/* ---- explicit Tesseract asset paths ----
-   iOS Safari will not always resolve the worker and wasm files implicitly
-   from the CDN bundle, which leaves recognition silently dead. Naming them
-   makes loading deterministic on iPad. */
+/* Explicit Tesseract asset paths: iOS Safari does not always resolve the
+   worker and wasm files implicitly from the CDN bundle, which leaves
+   recognition silently dead. Naming them makes loading deterministic. */
 var TESS = {
   workerPath: "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js",
   corePath:   "https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.0",
   langPath:   "https://tessdata.projectnaptha.com/4.0.0"
-};   // GLL artwork codes; used when a job is not in the table
+};
 
 var mem = {};
 var store = {
-  get: function(k){ try { return localStorage.getItem(k); } catch(e){ return mem[k] || null; } },
+  get: function(k){ try { return localStorage.getItem(k); } catch(e){ return mem[k]||null; } },
   set: function(k,v){ try { localStorage.setItem(k,v); } catch(e){ mem[k]=v; } }
 };
 var $ = function(id){ return document.getElementById(id); };
 
-var items = {}, descriptors = [];
-var current = null, img = null;
-var rects = { proof:null, press:null };
-var mode = "proof";
-var lastCompare = null;
+var items = {};
+var current = null;
+var proofOnFile = [];          // item numbers read off the proof photo
+var result = null;             // last comparison
+var busy = false;
 
+/* two independent photo panes */
+var pane = {
+  proof: { img:null, rect:null, canvas:null, ctx:null, drag:null },
+  press: { img:null, rect:null, canvas:null, ctx:null, drag:null }
+};
+
+/* ---------- helpers ---------- */
 function digitsOnly(s){ return (s||"").replace(/\D/g,""); }
-function normText(s){ return (s||"").toUpperCase().replace(/[^A-Z0-9 ]/g," ").replace(/\s+/g," ").trim(); }
 function digitize(s){
   return (s||"").replace(/[OQ]/gi,"0").replace(/[IL|]/g,"1")
                 .replace(/S/gi,"5").replace(/B/g,"8").replace(/[Zz]/g,"2");
 }
+function fmtItem(d){ return (d && d.length===9) ? d.slice(0,2)+"-"+d.slice(2) : d; }
 function esc(s){
   return String(s==null?"":s).replace(/[&<>"]/g,function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
   });
 }
-function note(id,msg,bad){
-  var el = $(id); el.textContent = msg || ""; el.className = bad ? "note warn" : "note";
+function note(id,msg,kind){
+  var el = $(id);
+  el.textContent = msg || "";
+  el.className = "note" + (kind ? " "+kind : "");
 }
 
-/* ---------- job table ---------- */
+/* ---------- item table ---------- */
 fetch("items.json",{cache:"no-store"})
   .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
   .then(function(rows){
     rows.forEach(function(r){
       var k = digitsOnly(r.item);
       if(k) items[k] = r;
-      if(r.descriptor) descriptors.push(r.descriptor);
     });
-    note("jobmsg","",false);
   })
-  .catch(function(){
-    note("jobmsg","",false);   /* table is optional metadata; absence is not an error */
-  });
+  .catch(function(){ /* optional metadata; absence is not an error */ });
 
-/* ---------- STEP 1 ---------- */
+/* ================= STEP 1 ================= */
 function submitJob(){
-  var job  = $("job").value.trim();
+  var job = $("job").value.trim();
   var item = $("item").value.trim();
-  var ik   = digitsOnly(item);
+  var ik = digitsOnly(item);
 
-  if(!job){ note("jobmsg","Enter the Job #.",true); $("job").focus(); return; }
-  if(!ik){ note("jobmsg","Enter the Item # from the Art Proof Approval.",true); $("item").focus(); return; }
+  if(!job){ note("jobmsg","Enter the Job #.","warn"); $("job").focus(); return; }
+  if(!ik){ note("jobmsg","Enter the Item # from the Art Proof Approval.","warn"); $("item").focus(); return; }
 
-  note("jobmsg","",false);
-  var rec = items[ik];
-  if(!rec){
-    rec = { item:item, code:"", descriptor:"", customer:"" };
-  }
-
+  note("jobmsg","");
+  var rec = items[ik] || {};
   current = {
     job: job,
     item: rec.item || item,
@@ -404,427 +376,366 @@ function submitJob(){
     customer: rec.customer || ""
   };
 
-  $("tCode").textContent = current.code || "\u2014";
+  $("tItem").textContent = current.item;
   $("tDesc").textContent = current.descriptor || "—";
   $("tCust").textContent = current.customer || "—";
   $("target").hidden = false;
 
   $("s2").classList.remove("locked");
-  $("shoot").disabled = false;
-  $("shoot").classList.add("hot");
+  $("shootProof").disabled = false;
+  $("shootProof").classList.add("hot");
   hideSlab();
   $("s2").scrollIntoView({behavior:"smooth", block:"start"});
 }
 $("submit").addEventListener("click", submitJob);
-$("job").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); $("item").focus(); }});
-$("item").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); submitJob(); }});
-$("job").addEventListener("input", resetDownstream);
-$("item").addEventListener("input", resetDownstream);
+$("job").addEventListener("keydown", function(e){
+  if(e.key === "Enter"){ e.preventDefault(); $("item").focus(); }
+});
+$("item").addEventListener("keydown", function(e){
+  if(e.key === "Enter"){ e.preventDefault(); submitJob(); }
+});
+$("job").addEventListener("input", resetAll);
+$("item").addEventListener("input", resetAll);
 
-function resetDownstream(){
-  current = null;
-  img = null;
-  rects.proof = null; rects.press = null;
-  lastCompare = null;
-  mode = "proof";
+function resetAll(){
+  current = null; proofOnFile = []; result = null;
+  pane.proof.img = null; pane.proof.rect = null;
+  pane.press.img = null; pane.press.rect = null;
   $("target").hidden = true;
   $("findings").hidden = true;
-  $("s2").classList.add("locked");
-  $("shoot").disabled = true;
-  $("shoot").classList.remove("hot");
+  ["s2","s3"].forEach(function(s){ $(s).classList.add("locked"); });
+  $("shootProof").disabled = true; $("shootProof").classList.remove("hot");
+  $("shootPress").disabled = true; $("shootPress").classList.remove("hot");
   $("validate").classList.remove("hot");
-  $("shot").classList.remove("on");
-  note("shotmsg","",false);
+  $("shotProof").classList.remove("on");
+  $("shotPress").classList.remove("on");
+  note("proofmsg",""); note("pressmsg","");
   hideSlab();
 }
 
-/* ---------- STEP 2: capture ---------- */
-$("shoot").addEventListener("click", function(){ $("file").click(); });
-$("retake").addEventListener("click", function(){ $("file").click(); });
+/* ================= photo panes ================= */
+function initPane(which, canvasId){
+  var p = pane[which];
+  p.canvas = $(canvasId);
+  p.ctx = p.canvas.getContext("2d");
 
-$("file").addEventListener("change", function(e){
-  var f = e.target.files && e.target.files[0];
-  if(!f) return;
-  var url = URL.createObjectURL(f);
+  p.canvas.addEventListener("pointerdown", function(ev){
+    if(!p.img) return;
+    p.canvas.setPointerCapture(ev.pointerId);
+    p.drag = pt(p, ev);
+    p.rect = null;
+    draw(which);
+  });
+  p.canvas.addEventListener("pointermove", function(ev){
+    if(!p.drag) return;
+    var q = pt(p, ev);
+    p.rect = { x:Math.min(p.drag.x,q.x), y:Math.min(p.drag.y,q.y),
+               w:Math.abs(q.x-p.drag.x), h:Math.abs(q.y-p.drag.y) };
+    draw(which);
+  });
+  p.canvas.addEventListener("pointerup", function(){
+    p.drag = null;
+    if(p.rect && (p.rect.w < 40 || p.rect.h < 40)) p.rect = null;
+    draw(which);
+    afterBox(which);
+  });
+}
+function pt(p, ev){
+  var r = p.canvas.getBoundingClientRect();
+  return { x:(ev.clientX-r.left)*(p.canvas.width/r.width),
+           y:(ev.clientY-r.top)*(p.canvas.height/r.height) };
+}
+function draw(which){
+  var p = pane[which];
+  if(!p.img) return;
+  var w = Math.min(p.img.naturalWidth, 1200);
+  var s = w / p.img.naturalWidth;
+  p.canvas.width = w;
+  p.canvas.height = Math.round(p.img.naturalHeight * s);
+  p.ctx.drawImage(p.img, 0, 0, p.canvas.width, p.canvas.height);
+  if(!p.rect) return;
+  var colour = which === "proof" ? "#005395" : "#E0A22E";
+  var lw = Math.max(3, p.canvas.width/280);
+  p.ctx.save();
+  p.ctx.strokeStyle = colour; p.ctx.lineWidth = lw;
+  p.ctx.strokeRect(p.rect.x, p.rect.y, p.rect.w, p.rect.h);
+  p.ctx.restore();
+}
+function paneScale(which){
+  var p = pane[which];
+  return p.img.naturalWidth / p.canvas.width;
+}
+
+function loadPhoto(which, file, then){
+  var url = URL.createObjectURL(file);
   var im = new Image();
   im.onload = function(){
-    img = im; rects.proof = null; rects.press = null; lastCompare = null;
-    $("findings").hidden = true;
-    setMode("proof"); syncPicks();
-    drawCanvas();
-    $("shot").classList.add("on");
-    $("shoot").classList.remove("hot");
-    $("validate").classList.add("hot");
-    note("shotmsg","",false);
-    hideSlab();
-    $("validate").scrollIntoView({behavior:"smooth", block:"center"});
+    pane[which].img = im;
+    pane[which].rect = null;
+    draw(which);
     URL.revokeObjectURL(url);
+    then();
   };
-  im.onerror = function(){ note("shotmsg","That image could not be opened. Take the photo again.",true); };
+  im.onerror = function(){
+    note(which === "proof" ? "proofmsg" : "pressmsg",
+         "That image could not be opened. Take the photo again.","warn");
+  };
   im.src = url;
+}
+
+/* ================= STEP 2: proof ================= */
+$("shootProof").addEventListener("click", function(){ $("fileProof").click(); });
+$("retakeProof").addEventListener("click", function(){ $("fileProof").click(); });
+$("clearProof").addEventListener("click", function(){
+  pane.proof.rect = null; draw("proof"); lockStep3();
+});
+$("fileProof").addEventListener("change", function(e){
+  var f = e.target.files && e.target.files[0];
   e.target.value = "";
+  if(!f) return;
+  loadPhoto("proof", f, function(){
+    $("shotProof").classList.add("on");
+    $("shootProof").classList.remove("hot");
+    $("findings").hidden = true;
+    hideSlab();
+    verifyProof();
+  });
 });
 
-/* ---------- canvas + region boxes ---------- */
-var cv = $("cv"), ctx = cv.getContext("2d");
-function drawCanvas(){
-  if(!img) return;
-  var w = Math.min(img.naturalWidth, 1200);
-  var s = w / img.naturalWidth;
-  cv.width = w; cv.height = Math.round(img.naturalHeight * s);
-  ctx.drawImage(img,0,0,cv.width,cv.height);
-  box(rects.proof, "#005395", "PROOF");
-  box(rects.press, "#E0A22E", "PRESS");
+/* Read the proof photo and confirm the entered Item # is on it. */
+function verifyProof(){
+  if(typeof Tesseract === "undefined"){
+    note("proofmsg","The text reader did not load. Check the network and reload.","warn");
+    return;
+  }
+  busy = true;
+  $("prog").classList.add("on");
+  $("progTxt").textContent = "Reading the proof";
+  $("progFill").style.width = "0%";
+  $("hintProof").textContent = "Checking the item number…";
+
+  Tesseract.recognize(prepFull("proof"), "eng", {
+    workerPath:TESS.workerPath, corePath:TESS.corePath, langPath:TESS.langPath,
+    logger: function(m){
+      if(m.status === "recognizing text") $("progFill").style.width = Math.round(m.progress*100)+"%";
+    }
+  }).then(function(res){
+    var t = digitize(res.data.text || "");
+    var runs = (t.match(/\d{2}[-\u2013\u2014.\s]{0,3}\d{7}/g) || [])
+                 .map(function(s){ return s.replace(/\D/g,""); });
+    proofOnFile = runs.filter(function(v,i){ return runs.indexOf(v)===i; });
+
+    if(!proofOnFile.length){
+      note("proofmsg","No item number could be read on this proof. Retake it flatter, with glare "+
+                      "off the product number.","warn");
+      $("hintProof").textContent = "Item number not read — retake the proof.";
+      lockStep3();
+      return;
+    }
+    if(proofOnFile.indexOf(current.itemDigits) === -1){
+      note("proofmsg","This proof shows " + proofOnFile.map(fmtItem).join(" and ") +
+                      ", not " + current.item + ". Confirm you have the right Art Proof Approval.","warn");
+      $("hintProof").textContent = "Wrong proof — item number does not match.";
+      lockStep3();
+      return;
+    }
+    note("proofmsg","Item " + current.item + " confirmed on this proof" +
+                    (proofOnFile.length > 1 ? " (one of " + proofOnFile.length + " approval blocks)." : "."),
+         "good");
+    $("hintProof").textContent = "Now drag a box around the artwork on the proof.";
+  }).catch(function(){
+    note("proofmsg","The proof could not be read. Retake it with even light.","warn");
+    lockStep3();
+  }).then(function(){
+    busy = false;
+    $("prog").classList.remove("on");
+  });
 }
-function box(r, colour, tag){
-  if(!r) return;
-  var lw = Math.max(3, cv.width/280);
-  ctx.save();
-  ctx.strokeStyle = colour; ctx.lineWidth = lw;
-  ctx.strokeRect(r.x, r.y, r.w, r.h);
-  ctx.fillStyle = colour;
-  var fs = Math.max(14, cv.width/44);
-  ctx.font = "700 " + fs + "px system-ui, sans-serif";
-  var tw = ctx.measureText(tag).width;
-  ctx.fillRect(r.x, Math.max(0, r.y-fs*1.45), tw+fs*0.6, fs*1.4);
-  ctx.fillStyle = "#fff";
-  ctx.fillText(tag, r.x+fs*0.3, Math.max(fs, r.y-fs*0.35));
-  ctx.restore();
-}
-function toPt(ev){
-  var r = cv.getBoundingClientRect();
-  return { x:(ev.clientX-r.left)*(cv.width/r.width), y:(ev.clientY-r.top)*(cv.height/r.height) };
-}
-var dragStart = null;
-cv.addEventListener("pointerdown", function(ev){
-  if(!img) return;
-  cv.setPointerCapture(ev.pointerId);
-  dragStart = toPt(ev);
-  rects[mode] = null;
-  drawCanvas();
+
+/* ================= STEP 3: press sample ================= */
+$("shootPress").addEventListener("click", function(){ $("filePress").click(); });
+$("retakePress").addEventListener("click", function(){ $("filePress").click(); });
+$("clearPress").addEventListener("click", function(){
+  pane.press.rect = null; draw("press"); $("validate").classList.remove("hot");
 });
-cv.addEventListener("pointermove", function(ev){
-  if(!dragStart) return;
-  var p = toPt(ev);
-  rects[mode] = { x:Math.min(dragStart.x,p.x), y:Math.min(dragStart.y,p.y),
-                  w:Math.abs(p.x-dragStart.x), h:Math.abs(p.y-dragStart.y) };
-  drawCanvas();
-});
-cv.addEventListener("pointerup", function(){
-  dragStart = null;
-  var r = rects[mode];
-  if(r && (r.w < 40 || r.h < 40)){ rects[mode] = null; }
-  drawCanvas();
-  syncPicks();
-  // after boxing the proof, arm the press selector automatically
-  if(mode === "proof" && rects.proof && !rects.press) setMode("press");
+$("filePress").addEventListener("change", function(e){
+  var f = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if(!f) return;
+  loadPhoto("press", f, function(){
+    $("shotPress").classList.add("on");
+    $("shootPress").classList.remove("hot");
+    $("findings").hidden = true;
+    hideSlab();
+    $("hintPress").textContent = "Drag a box around one label — match the crop you used on the proof.";
+    $("shotPress").scrollIntoView({behavior:"smooth", block:"center"});
+  });
 });
 
-function setMode(m){
-  mode = m;
-  $("pickProof").classList.toggle("armed", m === "proof");
-  $("pickPress").classList.toggle("armed", m === "press");
-  $("cropHint").textContent = (m === "proof")
-    ? "Drag a box around the artwork on the Art Proof Approval."
-    : "Now drag a box around the label off the press.";
-}
-function syncPicks(){
-  $("pickProof").classList.toggle("done", !!rects.proof);
-  $("pickPress").classList.toggle("done", !!rects.press);
-  $("okProof").textContent = rects.proof ? "\u2713" : "";
-  $("okPress").textContent = rects.press ? "\u2713" : "";
-  if(rects.proof && rects.press){
-    $("cropHint").textContent = "Both regions set. Validate for accuracy.";
-    $("validate").classList.add("hot");
+function afterBox(which){
+  if(which === "proof"){
+    if(pane.proof.rect && proofOnFile.indexOf(current.itemDigits) !== -1){
+      $("s3").classList.remove("locked");
+      $("shootPress").disabled = false;
+      $("shootPress").classList.add("hot");
+      $("hintProof").textContent = "Artwork boxed. Move to Step 3.";
+    } else {
+      lockStep3();
+    }
+  } else {
+    if(pane.press.rect){
+      $("validate").classList.add("hot");
+      $("hintPress").textContent = "Label boxed. Validate for accuracy.";
+    } else {
+      $("validate").classList.remove("hot");
+    }
   }
 }
-$("pickProof").addEventListener("click", function(){ setMode("proof"); });
-$("pickPress").addEventListener("click", function(){ setMode("press"); });
-$("clearsel").addEventListener("click", function(){
-  rects.proof = null; rects.press = null;
-  $("findings").hidden = true;
-  setMode("proof"); syncPicks(); drawCanvas();
-});
+function lockStep3(){
+  $("s3").classList.add("locked");
+  $("shootPress").disabled = true;
+  $("shootPress").classList.remove("hot");
+}
 
-/* ---------- prep pixels ---------- */
-function prep(region){
-  var sx,sy,sw,sh;
-  if(region){
-    var k = img.naturalWidth / cv.width;
-    sx=region.x*k; sy=region.y*k; sw=region.w*k; sh=region.h*k;
-  } else { sx=0; sy=0; sw=img.naturalWidth; sh=img.naturalHeight; }
-
-  var target = region ? 1400 : 2000;
-  var scale = Math.min(4, Math.max(1, target / sw));
+/* ---------- prep a whole photo for OCR ---------- */
+function prepFull(which){
+  var p = pane[which];
+  var target = 2000;
+  var scale = Math.min(3, Math.max(1, target / p.img.naturalWidth));
   var c = document.createElement("canvas");
-  c.width = Math.round(sw*scale); c.height = Math.round(sh*scale);
+  c.width = Math.round(p.img.naturalWidth*scale);
+  c.height = Math.round(p.img.naturalHeight*scale);
   var x = c.getContext("2d");
   x.imageSmoothingQuality = "high";
-  x.drawImage(img, sx,sy,sw,sh, 0,0,c.width,c.height);
+  x.drawImage(p.img, 0, 0, c.width, c.height);
 
-  var d = x.getImageData(0,0,c.width,c.height), p = d.data, i, g, lo=255, hi=0;
-  for(i=0;i<p.length;i+=4){
-    g = (p[i]*0.299 + p[i+1]*0.587 + p[i+2]*0.114)|0;
-    p[i]=p[i+1]=p[i+2]=g;
+  var d = x.getImageData(0,0,c.width,c.height), q = d.data, i, g, lo=255, hi=0;
+  for(i=0;i<q.length;i+=4){
+    g = (q[i]*0.299 + q[i+1]*0.587 + q[i+2]*0.114)|0;
+    q[i]=q[i+1]=q[i+2]=g;
     if(g<lo) lo=g; if(g>hi) hi=g;
   }
   var span = Math.max(1, hi-lo);
-  for(i=0;i<p.length;i+=4){
-    g = ((p[i]-lo)*255/span)|0;
-    p[i]=p[i+1]=p[i+2] = g<0?0:(g>255?255:g);
+  for(i=0;i<q.length;i+=4){
+    g = ((q[i]-lo)*255/span)|0;
+    q[i]=q[i+1]=q[i+2] = g<0?0:(g>255?255:g);
   }
   x.putImageData(d,0,0);
   return c;
 }
 
-/* ---------- validate ---------- */
-var busy = false;
+/* ================= VALIDATE ================= */
 $("validate").addEventListener("click", function(){
-  if(!current || !img){ note("shotmsg","Take a photo first.",true); return; }
   if(busy) return;
-  if(typeof Tesseract === "undefined"){
-    note("shotmsg","The text-reading engine did not load. Check the shop network and reload this page.",true);
-    return;
-  }
-  busy = true;
-  $("prog").classList.add("on");
-  $("progTxt").textContent = "Reading item numbers";
-  $("progFill").style.width = "0%";
-  hideSlab();
-  $("findings").hidden = true;
+  if(!pane.proof.rect){ note("pressmsg","Box the artwork on the proof first.","warn"); return; }
+  if(!pane.press.rect){ note("pressmsg","Box one label on the press sample first.","warn"); return; }
+  if(!window.PlateCompare){ note("pressmsg","compare.js did not load. Reload the page.","warn"); return; }
 
-  Tesseract.recognize(prep(null), "eng", {
-    workerPath: TESS.workerPath, corePath: TESS.corePath, langPath: TESS.langPath,
-    logger: function(m){
-      if(m.status === "recognizing text") $("progFill").style.width = Math.round(m.progress*70)+"%";
+  busy = true;
+  note("pressmsg","");
+  $("prog").classList.add("on");
+  $("progTxt").textContent = "Comparing copy — this takes a few seconds";
+  $("progFill").style.width = "40%";
+  hideSlab();
+
+  setTimeout(function(){
+    try {
+      result = window.PlateCompare.compare(
+        { img:pane.proof.img, rect:pane.proof.rect, scale:paneScale("proof") },
+        { img:pane.press.img, rect:pane.press.rect, scale:paneScale("press") },
+        {});
+      $("progFill").style.width = "100%";
+      decide();
+    } catch(err){
+      note("pressmsg","The comparison failed: " + err.message,"warn");
     }
-  }).then(function(res){
-    // visual comparison, only when both regions are boxed
-    if(rects.proof && rects.press && window.PlateCompare){
-      $("progTxt").textContent = "Comparing press sample to proof";
-      $("progFill").style.width = "78%";
-      return new Promise(function(done){
-        setTimeout(function(){
-          try {
-            lastCompare = window.PlateCompare.compare(
-              img, rects.proof, rects.press, img.naturalWidth/cv.width, {});
-          } catch(e){ lastCompare = null; }
-          $("progFill").style.width = "100%";
-          done(res);
-        }, 30);
-      });
-    }
-    lastCompare = null;
-    return res;
-  }).then(function(res){
-    decide(res.data.text || "");
-    if(lastCompare) showFindings(lastCompare);
-  }).catch(function(){
-    note("shotmsg","The photo could not be processed. Retake it with both items square-on and evenly lit.",true);
-  }).then(function(){
-    busy = false; $("prog").classList.remove("on");
-  });
+    busy = false;
+    $("prog").classList.remove("on");
+  }, 40);
 });
 
-/* ---------- findings panel ---------- */
-function showFindings(r){
-  var host = $("flist");
-  host.innerHTML = "";
-  window.PlateCompare.render($("out"), r, true);
-
+function decide(){
+  var r = result;
   var copyN = r.regions.length;
-  var colHi = r.colour.filter(function(b){ return b.d >= 12; }).length;
-
-  add("Copy", copyN
-    ? copyN + (copyN === 1 ? " difference region" : " difference regions") +
-      " \u2014 boxed in red on the image above."
-    : "No copy differences found above the noise floor.");
-
-  add("Colour", r.colourWorst < 12
-    ? "No colour deviation above the noise floor (largest " + r.colourWorst.toFixed(1) +
-      " Lab units; anything under about 6 is normal frame-to-frame variation)."
-    : "Largest relative deviation " + r.colourWorst.toFixed(1) + " Lab units across " + colHi +
-      " sampled block" + (colHi===1?"":"s") + ". Shaded amber above.");
-
-  add("Fit", r.registration < 0.25
-    ? "Alignment was weak (" + r.registration.toFixed(2) + "). Results may be unreliable \u2014 retake square-on with both items flat."
-    : "Regions aligned (" + r.registration.toFixed(2) + "), offset " + r.fit.dx + "/" + r.fit.dy + " px.");
-
-  function add(k, v){
-    var li = document.createElement("li");
-    li.innerHTML = "<b>" + k + "</b><span>" + esc(v) + "</span>";
-    host.appendChild(li);
-  }
-  $("findings").hidden = false;
-}
-
-function decide(text){
-  var digitText = digitize(text);
-
-  /* --- item numbers on the proof sheet ---
-     Product numbers run 2 digits + separator + 7 digits (10-9813961). Most
-     sheets carry one approval block; a few carry two. Collect all of them. */
-  var itemRuns = (digitText.match(/\d{2}[-\u2013\u2014.\s]{0,3}\d{7}/g) || [])
-                   .map(function(s){ return s.replace(/\D/g,""); });
-  var onProof = itemRuns.filter(function(v,i){ return itemRuns.indexOf(v)===i; });
-  var itemOK  = onProof.indexOf(current.itemDigits) !== -1;
-
-  /* --- artwork codes in frame --- */
-  var want  = digitsOnly(current.code);
-  var len   = want ? want.length : DEFAULT_CODE_LEN;
-  var runs  = (digitText.match(/\d{4,}/g) || []);
-  var codes = runs.filter(function(r){ return r.length === len; });
-  var uniq  = codes.filter(function(v,i){ return codes.indexOf(v)===i; });
-
-  /* Codes legitimately expected in frame: one per approval block that the
-     item table knows about. A two-block sheet showing two codes is normal. */
-  var allowed = [];
-  onProof.forEach(function(d){
-    var rec = items[d];
-    var c = rec && digitsOnly(rec.code);
-    if(c && allowed.indexOf(c) === -1) allowed.push(c);
-  });
-  var unexpected = allowed.length
-    ? uniq.filter(function(c){ return allowed.indexOf(c) === -1; })
-    : [];
-
   var verdict, headline, detail;
-  var proofLabel = onProof.length ? onProof.map(fmtItem).join("   ") : "none read";
-  var codeLabel  = uniq.length ? uniq.join("   ") : "none read";
 
-  if(!onProof.length){
-    verdict="hold"; headline="No read";
-    detail="No item number was found on the proof sheet. Retake with the Art Proof Approval flat "+
-           "and glare off the product number, or drag a box around it and validate again.";
-  }
-  else if(!itemOK){
-    verdict="stop"; headline="Stop \u2014 wrong item";
-    detail="You entered "+current.item+", but the proof sheet in frame shows "+
-           onProof.map(fmtItem).join(" and ")+". "+
-           (onProof.length > 1
-             ? "This sheet carries more than one approval block \u2014 confirm which one governs this job."
-             : "Confirm you are holding the right Art Proof Approval for this job.");
-  }
-  else if(unexpected.length){
-    verdict="stop"; headline="Stop \u2014 codes differ";
-    detail="Artwork code "+unexpected.join(" and ")+" is in frame but belongs to no item on this "+
-           "proof sheet. The press sample is not printing the approved artwork. Stop and verify the plates.";
-  }
-  else if(want && uniq.length && uniq.indexOf(want) === -1){
-    verdict="stop"; headline="Stop \u2014 wrong code";
-    detail="Item "+current.item+" is confirmed on the proof, but the artwork code read is "+
-           uniq.join(" and ")+" instead of "+want+". Check whether the plates were changed for this lot.";
-  }
-  else if(!allowed.length && onProof.length === 1 && uniq.length > 1){
-    /* Single-block sheet should show a single artwork code. */
-    verdict="stop"; headline="Stop \u2014 codes differ";
-    detail="Two different artwork codes are in frame ("+uniq.join(" and ")+") but the sheet has one "+
-           "approval block. The press sample and the proof are not the same artwork. Verify the plates.";
-  }
-  else if(!allowed.length && onProof.length > 1 && uniq.length > 1){
-    /* Two blocks, no codes on file: which code belongs to which block cannot
-       be told from the photo, so ask rather than guess. */
-    verdict="hold"; headline="Confirm block";
-    detail="Item "+current.item+" is on the sheet, but this sheet has "+onProof.length+
-           " approval blocks and "+uniq.length+" artwork codes ("+uniq.join(", ")+"). "+
-           "Confirm by eye that the press sample carries the code for "+current.item+
-           ", or add it to the item table for an automatic answer.";
-  }
-  else {
-    var veto = descriptorConflict(text);
-    if(veto){
-      verdict="stop"; headline="Stop \u2014 copy conflict";
-      detail="Item "+current.item+" is confirmed, but the label also reads \u201C"+veto+
-             "\u201D, which belongs to a different item. Do not run. Get a supervisor.";
-    } else {
-      verdict="go"; headline="Match";
-      detail="Item "+current.item+" is confirmed on the proof sheet"+
-             (onProof.length > 1 ? " (one of "+onProof.length+" approval blocks)" : "")+
-             (want && uniq.indexOf(want) !== -1
-                ? ", and the artwork code "+want+" matches."
-                : uniq.length ? "." : ". No artwork code was read \u2014 confirm the code by eye.");
-      if(!uniq.length) verdict = "hold", headline = "Item confirmed";
-    }
+  if(r.aspectSkew > 0.18){
+    verdict="hold"; headline="Boxes don't match";
+    detail = "The two boxes are very different shapes, so the crops are not comparable. "+
+             "Redraw them to the same edges of the label on each photo.";
+  } else if(r.registration < 0.80){
+    verdict="hold"; headline="Compare inconclusive";
+    detail = "The proof artwork and the press sample could not be aligned well enough to compare. "+
+             "Retake both square-on, flat, and filling the frame.";
+  } else if(copyN > 0){
+    verdict="stop"; headline="Stop — copy differs";
+    detail = copyN + (copyN===1 ? " area of copy differs" : " areas of copy differ") +
+             " between the press sample and the proof for item " + current.item +
+             ". See the boxed regions below before running more material.";
+  } else {
+    verdict="go"; headline="Match";
+    detail = "Item " + current.item + " is confirmed on the proof and the copy on the press "+
+             "sample matches the proof artwork.";
   }
 
-  /* --- fold in the side-by-side visual comparison --- */
-  if(lastCompare){
-    var vc = lastCompare;
-    var weakFit = vc.registration < 0.25;
-    var copyN = vc.regions.length;
-    var colBad = vc.colourWorst >= 12;   /* noise floor sits near 6 */
-
-    if(weakFit){
-      if(verdict === "go"){
-        verdict="hold"; headline="Compare inconclusive";
-        detail += " The two regions could not be aligned well enough to compare copy \u2014 retake "+
-                  "square-on with both items flat, or check by eye.";
-      }
-    } else if(copyN > 0){
-      verdict="stop"; headline="Stop \u2014 copy differs";
-      detail = copyN + (copyN === 1 ? " area of copy differs" : " areas of copy differ") +
-               " between the press sample and the proof. See the boxed regions below. " +
-               (itemOK ? "Item "+current.item+" is confirmed on the proof, so this is a printing or plate issue."
-                       : detail);
-    } else if(colBad && verdict === "go"){
-      verdict="hold"; headline="Check colour";
-      detail = "Copy matches the proof and item "+current.item+" is confirmed, but the ink reads "+
-               vc.colourWorst.toFixed(1)+" Lab units off the proof in this photo. "+
-               "Verify against the job standard with a spectrophotometer.";
-    }
-  }
-
-  paint(verdict, headline, detail, proofLabel, codeLabel);
-  record(verdict, proofLabel, codeLabel);
-}
-
-/* 109813961 -> 10-9813961 for display */
-function fmtItem(d){
-  return (d && d.length === 9) ? d.slice(0,2) + "-" + d.slice(2) : d;
-}
-
-function descriptorConflict(text){
-  var mine = normText(current.descriptor||"");
-  if(!mine) return null;               /* nothing on file to compare against */
-  var t = normText(text), hit = null;
-  descriptors.forEach(function(d){
-    var n = normText(d);
-    if(!n || n === mine) return;
-    if(t.indexOf(n) === -1) return;
-    if(mine && n.indexOf(mine) === -1 && mine.indexOf(n) === -1) return;
-    if(n.length > mine.length && (!hit || n.length > normText(hit).length)) hit = d;
-  });
-  return hit;
-}
-
-function paint(kind, headline, detail, expected, got){
   var s = $("slab");
-  s.className = "slab on is-" + kind;
+  s.className = "slab on is-" + verdict;
   $("call").textContent = headline;
   $("sub").textContent = detail;
   $("cItem").textContent = current.item;
-  $("cExp").textContent = expected;
-  $("cGot").textContent = got;
+  $("cProof").textContent = proofOnFile.length ? proofOnFile.map(fmtItem).join("  ") : "—";
+  $("cDiff").textContent = String(copyN);
   $("validate").classList.remove("hot");
+
+  showFindings(r);
+  record(verdict, copyN);
   s.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+function showFindings(r){
+  window.PlateCompare.render($("out"), r);
+  var host = $("flist");
+  host.innerHTML = "";
+  function add(k,v){
+    var li = document.createElement("li");
+    li.innerHTML = "<b>"+esc(k)+"</b><span>"+esc(v)+"</span>";
+    host.appendChild(li);
+  }
+  add("Copy", r.regions.length
+    ? r.regions.length + (r.regions.length===1 ? " difference region" : " difference regions") +
+      " — boxed in red above."
+    : "No copy differences found above the noise floor.");
+  add("Alignment", "Fit " + r.registration.toFixed(2) +
+      ", rotation " + r.rotation + "\u00B0, offset " + r.fit.dx + "/" + r.fit.dy + " px." +
+      (r.registration < 0.80 ? " Weak — treat the result as unreliable." : ""));
+  add("Crop match", r.aspectSkew < 0.08
+    ? "Both boxes are the same shape."
+    : "Boxes differ in shape by " + Math.round(r.aspectSkew*100) + "%." +
+      (r.aspectSkew > 0.18 ? " Too far apart to compare reliably." : ""));
+  $("findings").hidden = false;
 }
 function hideSlab(){ $("slab").className = "slab"; }
 
 $("next").addEventListener("click", function(){
   $("job").value = ""; $("item").value = "";
-  resetDownstream();
-  note("jobmsg","",false);
+  resetAll();
+  note("jobmsg","");
   $("job").focus();
   $("s1").scrollIntoView({behavior:"smooth", block:"start"});
 });
 
-/* ---------- log ---------- */
+/* ================= LOG ================= */
 var KEY = "gll.platecheck.log.v1";
 function readLog(){ try { return JSON.parse(store.get(KEY) || "[]"); } catch(e){ return []; } }
-function record(verdict, expected, got){
+function record(verdict, copyN){
   var row = {
-    t:new Date().toISOString(), job:current.job, item:current.item,
-    cust:current.customer||"", exp:expected, got:got, v:verdict
+    t: new Date().toISOString(),
+    job: current.job,
+    item: current.item,
+    cust: current.customer || "",
+    proof: proofOnFile.map(fmtItem).join(" "),
+    diffs: copyN,
+    v: verdict
   };
   var rows = readLog();
   rows.unshift(row);
@@ -835,29 +746,32 @@ function record(verdict, expected, got){
 function renderLog(){
   var rows = readLog(), host = $("logBody");
   if(!rows.length){ host.innerHTML = '<p class="empty">No checks recorded yet.</p>'; return; }
-  var html = '<table><thead><tr><th>Time</th><th>Job #</th><th>Item #</th><th>On proof</th><th>Codes</th><th>Result</th></tr></thead><tbody>';
+  var html = '<table><thead><tr><th>Time</th><th>Job #</th><th>Item #</th>'+
+             '<th>Diffs</th><th>Result</th></tr></thead><tbody>';
   rows.slice(0,25).forEach(function(r){
     var d = new Date(r.t);
     var when = d.toLocaleDateString([], {month:"numeric",day:"numeric"}) + " " +
                d.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
     var lbl = r.v==="go" ? "MATCH" : (r.v==="stop" ? "STOP" : "REVIEW");
-    html += "<tr><td>"+esc(when)+"</td><td class='c'>"+esc(r.job)+"</td><td class='c'>"+esc(r.item||"")+
-            "</td><td class='c'>"+esc(r.exp)+"</td><td class='c'>"+esc(r.got)+
+    html += "<tr><td>"+esc(when)+"</td><td class='c'>"+esc(r.job)+
+            "</td><td class='c'>"+esc(r.item||"")+
+            "</td><td class='c'>"+esc(String(r.diffs==null?"":r.diffs))+
             "</td><td><span class='tag "+r.v+"'>"+lbl+"</span></td></tr>";
   });
   host.innerHTML = html + "</tbody></table>";
   if(rows.length > 25){
-    host.innerHTML += '<p class="empty" style="margin-top:10px">Showing 25 most recent of '+rows.length+'. Export to CSV for the full log.</p>';
+    host.innerHTML += '<p class="empty" style="margin-top:10px">Showing 25 most recent of '+
+                      rows.length+'. Export to CSV for the full log.</p>';
   }
 }
 $("csv").addEventListener("click", function(){
   var rows = readLog();
   if(!rows.length) return;
-  var out = "timestamp,job,item,customer,items_on_proof,artwork_codes,result\n";
+  var out = "timestamp,job,item,customer,items_on_proof,copy_diff_regions,result\n";
   rows.forEach(function(r){
-    out += [r.t,r.job,r.item||"",r.cust,r.exp,r.got,r.v].map(function(v){
-      return '"' + String(v==null?"":v).replace(/"/g,'""') + '"';
-    }).join(",") + "\n";
+    out += [r.t,r.job,r.item||"",r.cust,r.proof||"",r.diffs==null?"":r.diffs,r.v]
+      .map(function(v){ return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'; })
+      .join(",") + "\n";
   });
   var a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([out],{type:"text/csv"}));
@@ -873,6 +787,9 @@ document.addEventListener("platesync", function(e){
   el.hidden = !e.detail.queued;
 });
 
+/* ================= INIT ================= */
+initPane("proof","cvProof");
+initPane("press","cvPress");
 renderLog();
 
 /* ---------------- self-check ---------------- */
@@ -887,60 +804,52 @@ renderLog();
     if(state === "bad") bad = true;
   }
 
-  // 1. how the page was opened
   var p = location.protocol;
   if(p === "file:"){
     row("bad","Opened as a local file (file://). The item table cannot load and the reader may be "+
-              "blocked. Serve the page over http:// or https:// \u2014 GitHub Pages works.");
+              "blocked. Serve over http:// or https:// — GitHub Pages works.");
   } else {
-    row("ok","Served over " + p.replace(":","") + " \u2014 correct.");
+    row("ok","Served over " + p.replace(":","") + " — correct.");
   }
 
-  // 2. item table
   fetch("items.json",{cache:"no-store"}).then(function(r){
     if(!r.ok) throw new Error("HTTP " + r.status);
     return r.json();
   }).then(function(rows){
     row("ok","Item table loaded (" + rows.length + " items).");
   }).catch(function(e){
-    row("warn","Item table not loaded (" + e.message + "). The app still runs; item numbers "+
-               "will not resolve to an expected artwork code.");
+    row("warn","Item table not loaded (" + e.message + "). The app still runs; the descriptor "+
+               "and customer will show blank.");
   });
 
-  // 3. OCR engine
-  if(typeof Tesseract === "undefined"){
-    row("bad","Text reader did not load from the CDN. Check the shop network, firewall, or "+
-              "content blockers, then reload.");
-  } else {
-    row("ok","Text reader present.");
-  }
+  row(typeof Tesseract !== "undefined" ? "ok" : "bad",
+      typeof Tesseract !== "undefined"
+        ? "Text reader present."
+        : "Text reader did not load from the CDN. Check the network or content blockers, then reload.");
 
-  // 4. comparison engine
   row(window.PlateCompare ? "ok" : "bad",
       window.PlateCompare ? "Comparison engine present."
-                          : "compare.js did not load \u2014 confirm it sits next to index.html.");
+                          : "compare.js did not load — confirm it sits next to index.html.");
 
-  // 5. camera capture support
   var fi = document.createElement("input");
   fi.type = "file";
   row(("capture" in fi) ? "ok" : "warn",
       ("capture" in fi) ? "Camera capture supported."
                         : "This browser may open the photo library instead of the camera.");
 
-  // 6. canvas ceiling (iPadOS caps total canvas area)
   try {
     var c = document.createElement("canvas");
     c.width = 2000; c.height = 1500;
     var g = c.getContext("2d");
     g.fillRect(0,0,1,1);
-    row(g.getImageData(0,0,1,1).data[3] === 255 ? "ok" : "bad",
-        "Canvas of 2000\u00d71500 works.");
+    row(g.getImageData(0,0,1,1).data[3] === 255 ? "ok" : "bad", "Canvas of 2000\u00d71500 works.");
   } catch(e){
     row("bad","Canvas test failed: " + e.message);
   }
 
   if(bad){ panel.setAttribute("data-bad","1"); panel.open = true; }
 })();
+
 })();
 </script>
 </body>
