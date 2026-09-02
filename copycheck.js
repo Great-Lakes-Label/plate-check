@@ -210,7 +210,14 @@ function findings(ops){
         return { t:best, conf:t.conf };
       });
       if(solid.length){
-        var txt = solid.map(function(t){return t.t;}).join(" ");
+        /* Two or more confident real words in one run is a phrase, not
+           speckle — report the WHOLE run so the operator sees the line as
+           printed (numbers and short words included). A single confident
+           word is reported alone. */
+        var shown = solid.length >= 2
+          ? side.map(function(t){ return (t.alts||[t.t]).reduce(function(a,b){ return b.length>a.length?b:a; }, t.t); })
+          : solid.map(function(t){return t.t;});
+        var txt = shown.join(" ");
         out.push(minus.length
           ? { kind:"missing", proof:txt, press:"", numeric:false, conf:solid[0].conf }
           : { kind:"extra",   proof:"", press:txt, numeric:false, conf:solid[0].conf });

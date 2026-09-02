@@ -37,9 +37,13 @@ These matter more than any setting in the code. Tested against real GLL photos: 
 angled, multi-across web shot on a light table yielded 15 usable words and a wrong verdict. The
 same label shot flat, filling the frame, on a dark surface yielded 43 and a correct one.
 
-**Proof sheet.** Whole sheet in frame, laid flat, glare off the artwork and off the item number
-printed under it. The app reads that number, confirms it matches what was entered, and takes the
-artwork directly above it. Nothing needs to be boxed by hand. A highlighter over the number is
+**Proof sheet.** Whole sheet in frame, laid flat, glare off both the artwork and the approval
+blocks. The app reads the lower half of the sheet on three colour channels and finds each
+ART PROOF APPROVAL block by its "Product Number:" label. The entered Item # must exactly match one
+of those Product Numbers — no fuzzy matching, since neighbouring items differ by one digit. Blocks
+are ordered top to bottom; the artworks above them are found as dense regions on the paper and
+ordered left to right; block *k* pairs with artwork *k*. Nothing is boxed by hand, and the caption
+under the artwork is not relied on (it is not always present). A highlighter over the number is
 fine.
 
 **Press sample.** ONE label, filling the frame, on a dark flat surface (a black work mat is
@@ -50,6 +54,16 @@ so the whole photo is read instead and results degrade.
 **Orientation.** Phone photos carry an orientation tag and the stored pixels are often rotated
 90 degrees from how they display. The app corrects this. If the self-check warns that orientation
 handling is unavailable on an old browser, hold the device upright when shooting.
+
+## Reading by colour band
+
+Contrast stretching across a whole label is dominated by its largest area — on these labels
+the blue band — which crushes the range of cream-on-orange type until the reader sees nothing.
+So after the whole-label passes, `pipeline.js` classifies each row by its background colour
+(white, warm, cool, dark), groups rows into bands, and reads each band on its own in the channel
+where that background goes darkest: blue for orange, red for blue, green for white. Results are
+unioned with the whole-label passes and de-duplicated by position. On the real press photo this
+took the "60% less sodium…" line from four mangled fragments to the complete sentence.
 
 ## Nutrition callouts
 

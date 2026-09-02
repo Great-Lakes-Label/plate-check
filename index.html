@@ -71,11 +71,6 @@
   .btn-min{background:none;border:2px solid var(--steel);color:var(--slate);
            font-size:13px;font-weight:600;padding:9px 14px}
 
-  .target{margin-top:14px;background:var(--card);border-left:4px solid var(--gll);padding:12px 14px}
-  .target dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline}
-  .target dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
-  .target dd{margin:0;font-family:var(--mono);font-size:17px;font-weight:700}
-  .target .desc{font-family:var(--sans);font-size:15px;font-weight:600}
 
   .note{font-size:13px;line-height:1.5;color:var(--slate);margin:12px 0 0}
   .note.warn{color:var(--stop);font-weight:600}
@@ -189,15 +184,8 @@
     <input type="text" id="job" inputmode="numeric" autocomplete="off" placeholder="Enter Job #">
     <label class="fld" for="item" style="margin-top:16px">Item #</label>
     <input type="text" id="item" inputmode="numeric" autocomplete="off" placeholder="Enter Item #" aria-describedby="itemhelp">
-    <p class="sub-help" id="itemhelp">The number printed under the artwork on the Art Proof Approval</p>
+    <p class="sub-help" id="itemhelp">The Product Number in the Art Proof Approval section</p>
     <button class="btn-submit" id="submit">Submit</button>
-    <div id="target" class="target" hidden>
-      <dl>
-        <dt>Item #</dt><dd id="tItem">&mdash;</dd>
-        <dt>Descriptor</dt><dd class="desc" id="tDesc">&mdash;</dd>
-        <dt>Customer</dt><dd class="desc" id="tCust">&mdash;</dd>
-      </dl>
-    </div>
     <p class="note" id="jobmsg"></p>
   </section>
 
@@ -205,7 +193,7 @@
   <section class="step locked" id="s2">
     <p class="eyebrow">Step 2 <b>&mdash; Proof</b></p>
     <p class="lead">Photograph the Art Proof Approval</p>
-    <p class="how">Whole sheet in frame, flat, glare off the artwork. The item number is checked and the artwork is found automatically.</p>
+    <p class="how">Whole sheet in frame, flat, glare off the artwork. The Item # is checked against the Product Number in the approval section and the matching artwork is found automatically.</p>
     <button class="btn-act" id="shootProof" disabled>Photograph proof</button>
     <input type="file" id="fileProof" accept="image/*" capture="environment" class="sr">
     <div class="thumb" id="thumbProof">
@@ -352,14 +340,10 @@ fetch("items.json",{cache:"no-store"})
 function submitJob(){
   var job = $("job").value.trim(), item = $("item").value.trim(), ik = digitsOnly(item);
   if(!job){ note("jobmsg","Enter the Job #.","warn"); $("job").focus(); return; }
-  if(ik.length !== 9){ note("jobmsg","Enter the full Item # as printed under the artwork, e.g. 10-9813960.","warn"); $("item").focus(); return; }
+  if(ik.length !== 9){ note("jobmsg","Enter the full Item # as shown in the Art Proof Approval, e.g. 10-9813960.","warn"); $("item").focus(); return; }
   note("jobmsg","");
   var rec = items[ik] || {};
   current = { job:job, item:fmtItem(ik), itemDigits:ik, descriptor:rec.descriptor||"", customer:rec.customer||"" };
-  $("tItem").textContent = current.item;
-  $("tDesc").textContent = current.descriptor || "—";
-  $("tCust").textContent = current.customer || "—";
-  $("target").hidden = false;
   $("s2").classList.remove("locked");
   $("shootProof").disabled = false; $("shootProof").classList.add("hot");
   hideSlab();
@@ -374,7 +358,7 @@ $("item").addEventListener("input", resetAll);
 function resetAll(){
   current = null; result = null;
   proof = { img:null, words:null, onSheet:[], box:null }; press = { img:null, words:null, box:null }; bubbles = null;
-  $("target").hidden = true; $("findings").hidden = true;
+  $("findings").hidden = true;
   $("s2").classList.add("locked"); $("s3").classList.add("locked");
   $("shootProof").disabled = true; $("shootProof").classList.remove("hot");
   $("shootPress").disabled = true; $("shootPress").classList.remove("hot");
@@ -420,17 +404,24 @@ $("fileProof").addEventListener("change", function(e){
     proof.onSheet = res.onSheet;
     if(!res.found){
       proof.words = null;
-      $("capProof").textContent = "Item number not found under any artwork.";
+      $("capProof").textContent = "Item number is not a Product Number on this sheet.";
       note("proofmsg", res.onSheet.length
-        ? "This sheet shows " + res.onSheet.map(fmtItem).join(" and ") + " under the artwork, not " + current.item + ". Confirm you have the right Art Proof Approval."
-        : "No item number could be read under the artwork. Retake flatter, with glare off the number.", "warn");
+        ? "The Art Proof Approval on this sheet lists " + res.onSheet.map(fmtItem).join(" and ") + ", not " + current.item + ". Confirm you have the right proof."
+        : (res.blocks ? "The Product Number in the approval section could not be read. Retake flatter, with glare off the approval block."
+                      : "No Art Proof Approval block could be read. Make sure the whole sheet is in frame."), "warn");
+      return;
+    }
+    if(res.noArtwork){
+      proof.words = null;
+      $("capProof").textContent = "Approval matched, but no artwork was found above it.";
+      note("proofmsg", "Item " + current.item + " is on the approval, but no artwork could be located on the sheet. Retake with the whole sheet flat and in frame.", "warn");
       return;
     }
     proof.words = res.words; proof.box = res.box;
     thumb("cvProof", proof.img, res.box);
-    $("capProof").textContent = "Artwork located for " + current.item + " · " + res.words.length + " words read";
-    note("proofmsg", "Item " + current.item + " confirmed on this proof" +
-      (res.onSheet.length > 1 ? " (one of " + res.onSheet.length + " items on the sheet)." : "."), "good");
+    $("capProof").textContent = "Artwork " + (res.blockIndex+1) + " of " + res.artworks + " located · " + res.words.length + " words read";
+    note("proofmsg", "Item " + current.item + " matches Product Number on approval block " + (res.blockIndex+1) +
+      (res.blocks > 1 ? " of " + res.blocks : "") + ".", "good");
     $("s3").classList.remove("locked");
     $("shootPress").disabled = false; $("shootPress").classList.add("hot");
     $("s3").scrollIntoView({behavior:"smooth", block:"start"});
