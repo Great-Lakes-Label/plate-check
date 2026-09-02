@@ -13,6 +13,8 @@ Runs entirely in the browser. No server, no build step, no install.
 1. Create a repository (public or private — Pages works with private repos on paid plans).
 2. Commit these three files to the repository root:
    - `index.html`
+   - `pipeline.js`
+   - `bubbles.js`
    - `copycheck.js`
    - `sync.js`
    - `items.json`
@@ -28,6 +30,45 @@ Do not open `index.html` by double-clicking it from a folder. Browsers block `fe
 `https://` — GitHub Pages, or `python3 -m http.server` for local testing.
 
 ---
+
+## Taking the photos
+
+These matter more than any setting in the code. Tested against real GLL photos: a curled,
+angled, multi-across web shot on a light table yielded 15 usable words and a wrong verdict. The
+same label shot flat, filling the frame, on a dark surface yielded 43 and a correct one.
+
+**Proof sheet.** Whole sheet in frame, laid flat, glare off the artwork and off the item number
+printed under it. The app reads that number, confirms it matches what was entered, and takes the
+artwork directly above it. Nothing needs to be boxed by hand. A highlighter over the number is
+fine.
+
+**Press sample.** ONE label, filling the frame, on a dark flat surface (a black work mat is
+ideal). The app finds the label as the bright shape against the dark background. A multi-across
+web in frame is detected and refused; a light background makes the label impossible to isolate,
+so the whole photo is read instead and results degrade.
+
+**Orientation.** Phone photos carry an orientation tag and the stored pixels are often rotated
+90 degrees from how they display. The app corrects this. If the self-check warns that orientation
+handling is unavailable on an old browser, hold the device upright when shooting.
+
+## Nutrition callouts
+
+The small numeric callouts (180 CALORIES, 2.5g SAT FAT, 35mg SODIUM, 0g ADDED SUGARS) are the
+one thing OCR cannot be trusted with on these labels: in this condensed face Tesseract reads a 5
+as a 9 at 84% confidence, which is a wrong value rather than a gap. Every preprocessing route was
+tried — per-bubble isolation, binarisation, character whitelists, both Tesseract models — and the
+misread persisted.
+
+So they are not read. They are **compared**. `bubbles.js` finds each white callout on the proof
+artwork and the press sample, isolates the number line inside it, normalises stroke weight, and
+matches the two shapes. A changed digit shows as a large shape difference; no recognition is
+involved, so no glyph confusion is possible. On real GLL photos: matching numbers score 0.01–0.02,
+a changed number 0.12–0.14, and the same label photographed twice scores 0.000. The threshold is
+0.05.
+
+A red callout card means the value on the press sample is not the value on the proof. The
+operator reads both crops — they are shown side by side — and confirms. The tool's job is to say
+which one to look at.
 
 ## Maintaining the item table
 

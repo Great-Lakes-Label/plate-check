@@ -29,8 +29,12 @@ window.CopyCheck = (function(){
 "use strict";
 
 var MIN_CONF = 60;      // drop words the reader was not confident about
-var CONF_NUM = 75;      // a numeric conflict needs more confidence than a word
+var CONF_NUM = 85;      // a numeric conflict needs more confidence than a word
 var MIN_LEN  = 2;       // ignore stray single characters
+var CONF_EXTRA   = 88;  // extra word on the press: this confident to be reported
+var CONF_MISSING = 95;  // word missing from press: near-perfect proof read required,
+                        // because the press photo is the weaker reader
+var LEN_SOLO     = 5;   // ...and this long, so fragments never qualify
 
 /* ---------- pull words out of a Tesseract result ---------- */
 function words(data){
@@ -190,7 +194,28 @@ function findings(ops){
       if(isNum && lowConf < CONF_NUM){ unverified += minus.length + plus.length; continue; }
       out.push({ kind:"changed", proof:pTxt, press:sTxt, numeric:isNum, conf:lowConf });
     } else {
-      unverified += minus.length + plus.length;
+      /* One-sided run. Almost always a reading gap — EXCEPT when it holds a
+         long, vowel-bearing word the reader was very sure of. "LIGHTLY" at
+         96% on the press and absent from the proof is a real difference;
+         "EC", "IH", "FY" at 70% are speckle. Only the confident real words
+         are promoted; the rest stay counted as unverified. */
+      var side = minus.length ? minus : plus;
+      var floor = minus.length ? CONF_MISSING : CONF_EXTRA;
+      var solid = side.filter(function(t){
+        /* judge on the longest candidate reading, not the primary */
+        var best = (t.alts||[t.t]).reduce(function(a,b){ return b.length>a.length?b:a; }, t.t);
+        return !t.num && t.conf >= floor && best.length >= LEN_SOLO && /[AEIOUY]/.test(best);
+      }).map(function(t){
+        var best = (t.alts||[t.t]).reduce(function(a,b){ return b.length>a.length?b:a; }, t.t);
+        return { t:best, conf:t.conf };
+      });
+      if(solid.length){
+        var txt = solid.map(function(t){return t.t;}).join(" ");
+        out.push(minus.length
+          ? { kind:"missing", proof:txt, press:"", numeric:false, conf:solid[0].conf }
+          : { kind:"extra",   proof:"", press:txt, numeric:false, conf:solid[0].conf });
+      }
+      unverified += side.length - solid.length;
     }
   }
   /* numeric conflicts first: they are what stops a press */

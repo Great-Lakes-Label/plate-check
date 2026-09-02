@@ -49,9 +49,8 @@
   .eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;
            text-transform:uppercase;color:var(--gll);margin:0 0 12px}
   .eyebrow b{color:var(--slate);font-weight:500}
-  .lead{font-family:var(--disp);font-weight:600;font-size:22px;line-height:1.12;
-        margin:0 0 6px;color:var(--ink)}
-  .howto{font-size:13px;color:var(--slate);line-height:1.5;margin:0 0 14px}
+  .lead{font-family:var(--disp);font-weight:600;font-size:22px;line-height:1.12;margin:0 0 6px}
+  .how{font-size:13px;line-height:1.5;color:var(--slate);margin:0 0 14px}
 
   label.fld{display:block;font-family:var(--mono);font-size:13px;font-weight:700;
             letter-spacing:.08em;color:var(--slate);margin:0 0 6px}
@@ -63,20 +62,18 @@
   button{font-family:inherit;cursor:pointer;border:0;border-radius:6px}
   button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
   .btn-submit{background:var(--gll);color:#fff;font-weight:600;font-size:16px;
-              padding:15px 26px;letter-spacing:.02em;display:block;width:100%;margin-top:18px}
+              padding:15px 26px;display:block;width:100%;margin-top:18px}
   .btn-act{display:block;width:100%;background:var(--console);color:#fff;
     font-family:var(--disp);font-weight:700;font-size:25px;letter-spacing:.06em;
     text-transform:uppercase;padding:24px 16px}
   .btn-act.hot{background:var(--gold);color:#2B1D00;box-shadow:0 0 0 4px rgba(224,162,46,.28)}
   .btn-act:disabled{background:var(--steel);color:#fff;box-shadow:none;cursor:default}
-  .btn-act + .btn-act{margin-top:12px}
   .btn-min{background:none;border:2px solid var(--steel);color:var(--slate);
            font-size:13px;font-weight:600;padding:9px 14px}
 
   .target{margin-top:14px;background:var(--card);border-left:4px solid var(--gll);padding:12px 14px}
   .target dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline}
-  .target dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
-             text-transform:uppercase;color:var(--slate)}
+  .target dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
   .target dd{margin:0;font-family:var(--mono);font-size:17px;font-weight:700}
   .target .desc{font-family:var(--sans);font-size:15px;font-weight:600}
 
@@ -84,25 +81,25 @@
   .note.warn{color:var(--stop);font-weight:600}
   .note.good{color:var(--go);font-weight:600}
 
-  .shot{margin-top:16px;display:none}
-  .shot.on{display:block}
-  .shot canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
+  .thumb{margin-top:14px;display:none}
+  .thumb.on{display:block}
+  .thumb canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
+  .thumb .cap{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+              color:var(--slate);margin:6px 0 0}
   .tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 
   .slab{display:none;color:#fff}
   .slab.on{display:block}
   .slab .bar{height:10px}
   .slab .body{padding:22px 18px 24px}
-  .slab .call{font-family:var(--disp);font-weight:700;font-size:44px;line-height:.94;
+  .slab .call{font-family:var(--disp);font-weight:700;font-size:46px;line-height:.92;
               letter-spacing:.03em;text-transform:uppercase;margin:0 0 4px}
   .slab .sub{font-size:14px;line-height:1.45;margin:0;opacity:.94}
   .cmp{margin:18px 0 0;border-top:1px solid rgba(255,255,255,.28)}
   .cmp div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;
            padding:11px 0;border-bottom:1px solid rgba(255,255,255,.28)}
-  .cmp dt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
-          text-transform:uppercase;opacity:.8;margin:0}
-  .cmp dd{font-family:var(--mono);font-size:20px;font-weight:700;margin:0;
-          text-align:right;word-break:break-all}
+  .cmp dt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8;margin:0}
+  .cmp dd{font-family:var(--mono);font-size:22px;font-weight:700;margin:0;text-align:right;word-break:break-all}
   .slab.is-go{background:var(--go)}    .slab.is-go .bar{background:#064d25}
   .slab.is-stop{background:var(--stop)}
   .slab.is-stop .bar{background:repeating-linear-gradient(45deg,#1a1a1a 0 14px,#F2C200 14px 28px)}
@@ -111,25 +108,33 @@
 
   .prog{display:none;padding:18px;background:var(--card);border-bottom:1px solid var(--steel)}
   .prog.on{display:block}
-  .prog p{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-          color:var(--slate);margin:0 0 8px}
+  .prog p{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin:0 0 8px}
   .prog .track{height:6px;background:var(--steel);border-radius:3px;overflow:hidden}
   .prog .fill{height:100%;width:0;background:var(--gll);transition:width .25s ease}
 
-  .findings{padding:0 18px 26px}
+  .findings{padding:0 18px 24px}
   .cdiff{width:100%;border-collapse:collapse;margin:0}
   .cdiff th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
-            color:var(--slate);text-align:left;font-weight:700;padding:0 10px 8px 0;
-            border-bottom:2px solid var(--steel)}
-  .cdiff td{font-size:15px;padding:11px 10px 11px 0;border-bottom:1px solid var(--card);
-            vertical-align:top;line-height:1.35;word-break:break-word}
+            color:var(--slate);text-align:left;font-weight:700;padding:0 10px 8px 0;border-bottom:2px solid var(--steel)}
+  .cdiff td{font-size:14px;padding:10px 10px 10px 0;border-bottom:1px solid var(--card);vertical-align:top;line-height:1.35;word-break:break-word}
   .cdiff td.p{color:var(--slate)}
   .cdiff td.s{font-weight:700;color:var(--stop)}
-  .cdiff td.n{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;
-              color:var(--stop);white-space:nowrap;font-weight:700}
-  .cover{font-size:12px;line-height:1.5;color:var(--slate);margin:14px 0 0;
-         border-left:3px solid var(--steel);padding-left:10px}
+  .cdiff td.k{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gll);white-space:nowrap}
+  .disclaim{font-size:12px;line-height:1.5;color:var(--slate);margin:16px 0 0;border-left:3px solid var(--steel);padding-left:10px}
+  .bubrow{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+  .bub{border:2px solid var(--steel);border-radius:6px;padding:8px;background:#fff}
+  .bub.differs{border-color:var(--stop);background:#FDF3F2}
+  .bub.same{border-color:var(--go)}
+  .bub.unresolved{border-color:var(--hold);background:#FFF9EE}
+  .bub .tag{display:block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;
+            text-transform:uppercase;margin:0 0 6px}
+  .bub.differs .tag{color:var(--stop)} .bub.same .tag{color:var(--go)} .bub.unresolved .tag{color:var(--hold)}
+  .bub .pair{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .bub .pair div{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate)}
+  .bub canvas{display:block;width:100%;border:1px solid var(--steel);border-radius:3px;background:#fff}
+  .bub .sc{font-family:var(--mono);font-size:10px;color:var(--slate);margin:6px 0 0}
 
+  /* ---------- printable record ---------- */
   #report{display:none}
   @media print{
     body{background:#fff}
@@ -137,36 +142,29 @@
     .top,#errbar,#diag,.step,.prog,.slab,.findings{display:none !important}
     #report{display:block;color:#000;font-size:10.5pt;line-height:1.35}
     @page{margin:14mm 14mm 12mm}
-    .rpt-head{display:flex;justify-content:space-between;align-items:flex-start;
-              border-bottom:2.5pt solid #000;padding-bottom:7pt;margin-bottom:12pt}
-    .rpt-head h2{font-family:var(--disp);font-size:22pt;letter-spacing:.04em;
-                 text-transform:uppercase;margin:0;line-height:1}
+    .rpt-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2.5pt solid #000;padding-bottom:7pt;margin-bottom:12pt}
+    .rpt-head h2{font-family:var(--disp);font-size:22pt;letter-spacing:.04em;text-transform:uppercase;margin:0;line-height:1}
     .rpt-org{font-size:8.5pt;margin:3pt 0 0;color:#333}
-    .rpt-verdict{font-family:var(--disp);font-size:20pt;font-weight:700;letter-spacing:.04em;
-                 text-transform:uppercase;border:2.5pt solid #000;padding:4pt 12pt;white-space:nowrap}
+    .rpt-verdict{font-family:var(--disp);font-size:20pt;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:2.5pt solid #000;padding:4pt 12pt;white-space:nowrap}
     .rpt-meta{width:100%;border-collapse:collapse;margin:0 0 11pt}
-    .rpt-meta th{text-align:left;font-size:7.5pt;letter-spacing:.09em;text-transform:uppercase;
-      color:#333;font-weight:700;padding:4pt 8pt 4pt 0;white-space:nowrap;
-      border-bottom:.5pt solid #999;width:1%}
+    .rpt-meta th{text-align:left;font-size:7.5pt;letter-spacing:.09em;text-transform:uppercase;color:#333;font-weight:700;padding:4pt 8pt 4pt 0;white-space:nowrap;border-bottom:.5pt solid #999;width:1%}
     .rpt-meta td{font-size:11.5pt;font-weight:700;padding:4pt 16pt 4pt 0;border-bottom:.5pt solid #999}
     .rpt-detail{font-size:10.5pt;margin:0 0 13pt;padding-left:8pt;border-left:2.5pt solid #000}
-    .rpt-h3{font-size:8pt;letter-spacing:.11em;text-transform:uppercase;
-            margin:0 0 5pt;padding-bottom:2pt;border-bottom:1pt solid #000}
+    .rpt-h3{font-size:8pt;letter-spacing:.11em;text-transform:uppercase;margin:0 0 5pt;padding-bottom:2pt;border-bottom:1pt solid #000}
     table.rpt-diff{width:100%;border-collapse:collapse;margin:0 0 12pt}
-    table.rpt-diff th{font-size:7.5pt;letter-spacing:.08em;text-transform:uppercase;
-                      text-align:left;padding:0 8pt 3pt 0;border-bottom:1pt solid #000}
+    table.rpt-diff th{font-size:7.5pt;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:0 8pt 3pt 0;border-bottom:1pt solid #000}
     table.rpt-diff td{font-size:11pt;padding:5pt 8pt 5pt 0;border-bottom:.5pt solid #bbb;vertical-align:top}
+    table.rpt-diff td.k{font-size:7.5pt;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:#333}
     table.rpt-diff td.s{font-weight:700}
     .rpt-clean{font-size:11pt;margin:0 0 12pt}
     .rpt-note{font-size:8pt;color:#333;margin:0 0 13pt;line-height:1.4}
-    .rpt-sign{width:100%;border-collapse:separate;border-spacing:16pt 0;margin-top:20pt}
-    .rpt-sign td{font-size:7.5pt;letter-spacing:.09em;text-transform:uppercase;
-                 color:#333;padding-top:22pt;vertical-align:bottom}
+    .rpt-sign{width:100%;border-collapse:separate;border-spacing:16pt 0;margin-top:26pt}
+    .rpt-sign td{font-size:7.5pt;letter-spacing:.09em;text-transform:uppercase;color:#333;padding-top:22pt;vertical-align:bottom}
     .rpt-sign .ln{display:block;border-bottom:1pt solid #000;margin-bottom:3pt}
   }
 
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -190,9 +188,8 @@
     <label class="fld" for="job">Job #</label>
     <input type="text" id="job" inputmode="numeric" autocomplete="off" placeholder="Enter Job #">
     <label class="fld" for="item" style="margin-top:16px">Item #</label>
-    <input type="text" id="item" inputmode="numeric" autocomplete="off"
-           placeholder="Enter Item #" aria-describedby="itemhelp">
-    <p class="sub-help" id="itemhelp">As shown on the Art Proof Approval</p>
+    <input type="text" id="item" inputmode="numeric" autocomplete="off" placeholder="Enter Item #" aria-describedby="itemhelp">
+    <p class="sub-help" id="itemhelp">The number printed under the artwork on the Art Proof Approval</p>
     <button class="btn-submit" id="submit">Submit</button>
     <div id="target" class="target" hidden>
       <dl>
@@ -207,13 +204,13 @@
   <!-- STEP 2 -->
   <section class="step locked" id="s2">
     <p class="eyebrow">Step 2 <b>&mdash; Proof</b></p>
-    <p class="lead">Photograph the proof sheet</p>
-    <p class="howto">Whole sheet in frame, flat, glare off the artwork. The Item # below the
-    artwork is found automatically.</p>
+    <p class="lead">Photograph the Art Proof Approval</p>
+    <p class="how">Whole sheet in frame, flat, glare off the artwork. The item number is checked and the artwork is found automatically.</p>
     <button class="btn-act" id="shootProof" disabled>Photograph proof</button>
     <input type="file" id="fileProof" accept="image/*" capture="environment" class="sr">
-    <div class="shot" id="shotProof">
+    <div class="thumb" id="thumbProof">
       <canvas id="cvProof"></canvas>
+      <p class="cap" id="capProof"></p>
       <div class="tools"><button class="btn-min" id="retakeProof">Retake</button></div>
     </div>
     <p class="note" id="proofmsg"></p>
@@ -223,14 +220,13 @@
   <section class="step locked" id="s3">
     <p class="eyebrow">Step 3 <b>&mdash; Press sample</b></p>
     <p class="lead">Photograph one label off the press</p>
-    <p class="howto">One single label, filling the frame, laid flat. Do not shoot the whole web
-    &mdash; one label close up reads far better.</p>
+    <p class="how">One label, filling the frame, on a dark flat surface. The label is found automatically.</p>
     <button class="btn-act" id="shootPress" disabled>Photograph press sample</button>
     <input type="file" id="filePress" accept="image/*" capture="environment" class="sr">
-    <div class="shot" id="shotPress">
+    <div class="thumb" id="thumbPress">
       <canvas id="cvPress"></canvas>
+      <p class="cap" id="capPress"></p>
       <div class="tools"><button class="btn-min" id="retakePress">Retake</button></div>
-      <button class="btn-act" id="validate">Validate for accuracy</button>
     </div>
     <p class="note" id="pressmsg"></p>
   </section>
@@ -249,6 +245,7 @@
       <p class="sub" id="sub"></p>
       <dl class="cmp">
         <div><dt>Item #</dt><dd id="cItem">&mdash;</dd></div>
+        <div><dt>On proof</dt><dd id="cProof">&mdash;</dd></div>
         <div><dt>Copy differences</dt><dd id="cDiff">&mdash;</dd></div>
       </dl>
       <div class="again">
@@ -262,29 +259,32 @@
   <section class="findings" id="findings" hidden>
     <p class="eyebrow" style="margin-top:22px">Copy differences</p>
     <table class="cdiff" id="cdiff"></table>
-    <p class="cover" id="cover"></p>
+    <div id="bubWrap" hidden>
+      <p class="eyebrow" style="margin-top:22px">Nutrition callouts <b>&mdash; compared by shape</b></p>
+      <div class="bubrow" id="bubrow"></div>
+      <p class="sub-help" id="bubnote"></p>
+    </div>
+    <p class="disclaim" id="disclaim">Wording only. Layout, print quality, registration and colour are not evaluated.</p>
   </section>
 
-  <!-- PRINT RECORD -->
+  <!-- PRINT REPORT -->
   <section id="report" aria-hidden="true">
     <div class="rpt-head">
-      <div>
-        <h2>Plate Check Record</h2>
-        <p class="rpt-org">Great Lakes Label, LLC &middot; Comstock Park, MI</p>
-      </div>
+      <div><h2>Plate Check Record</h2><p class="rpt-org">Great Lakes Label, LLC &middot; Comstock Park, MI</p></div>
       <div class="rpt-verdict" id="rVerdict">&mdash;</div>
     </div>
     <table class="rpt-meta">
       <tr><th>Job #</th><td id="rJob">&mdash;</td><th>Item #</th><td id="rItem">&mdash;</td></tr>
       <tr><th>Customer</th><td id="rCust" colspan="3">&mdash;</td></tr>
-      <tr><th>Checked</th><td id="rWhen">&mdash;</td><th>Verified</th><td id="rCov">&mdash;</td></tr>
+      <tr><th>Checked</th><td id="rWhen">&mdash;</td><th>Item # on proof</th><td id="rOnProof">&mdash;</td></tr>
     </table>
     <p class="rpt-detail" id="rDetail"></p>
     <h3 class="rpt-h3">Copy differences</h3>
     <div id="rDiffs"></div>
-    <p class="rpt-note">Wording only. Layout, print quality, registration and colour are not
-    evaluated by this check. Words that could not be read confidently were not compared and must
-    be verified by eye.</p>
+    <h3 class="rpt-h3">Nutrition callouts (compared by shape)</h3>
+    <div id="rBub"></div>
+    <p class="rpt-note">Wording only. Layout, print quality, registration and colour are not evaluated by this check.
+    Small type the reader could not resolve was not compared and must be verified by eye.</p>
     <table class="rpt-sign">
       <tr><td><span class="ln"></span>Press operator</td><td><span class="ln"></span>Date / time</td></tr>
       <tr><td><span class="ln"></span>Supervisor</td><td><span class="ln"></span>Date / time</td></tr>
@@ -295,28 +295,25 @@
 
 <script>
 (function(){
-  function show(m){
-    var b=document.getElementById("errbar");
-    if(!b) return;
-    b.hidden=false;
-    b.textContent=(b.textContent?b.textContent+"\n\n":"")+m;
+  function show(msg){
+    var b = document.getElementById("errbar"); if(!b) return;
+    b.hidden = false; b.textContent = (b.textContent ? b.textContent + "\n\n" : "") + msg;
   }
   window.addEventListener("error", function(e){
-    if(e.target && e.target.tagName === "SCRIPT"){
-      show("Could not load script: " + (e.target.src||"?") + " — check the network or firewall.");
-      return;
-    }
-    show("Error: " + (e.message||"unknown") +
-         (e.filename ? "  ("+String(e.filename).split("/").pop()+":"+e.lineno+")" : ""));
+    if(e.target && e.target.tagName === "SCRIPT"){ show("Could not load script: " + (e.target.src||"?") + " — check the shop network or firewall."); return; }
+    show("Error: " + (e.message||"unknown") + (e.filename ? "  (" + String(e.filename).split("/").pop() + ":" + e.lineno + ")" : ""));
   }, true);
   window.addEventListener("unhandledrejection", function(e){
-    show("Error: " + ((e.reason && (e.reason.message||e.reason)) || "request failed"));
+    show("Error: " + ((e.reason && (e.reason.message || e.reason)) || "request failed"));
   });
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="ocr.js"></script>
+<script src="pipeline.js"></script>
+<script src="bubbles.js"></script>
 <script src="copycheck.js"></script>
+<!-- Uncomment only for MODE "graph" in sync.js -->
+<!-- <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script> -->
 <script src="sync.js"></script>
 <script>
 (function(){
@@ -327,62 +324,44 @@ var TESS = {
   corePath:   "https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.0",
   langPath:   "https://tessdata.projectnaptha.com/4.0.0"
 };
-
 var $ = function(id){ return document.getElementById(id); };
+
 var items = {}, current = null, busy = false;
-var proofImg = null, proofWords = null, artRect = null;
-var pressImg = null, result = null;
+var proof = { img:null, words:null, onSheet:[], box:null };
+var press = { img:null, words:null, box:null };
+var bubbles = null;
+var result = null;
 
 function digitsOnly(s){ return (s||"").replace(/\D/g,""); }
 function fmtItem(d){ return (d && d.length===9) ? d.slice(0,2)+"-"+d.slice(2) : d; }
-function esc(s){
-  return String(s==null?"":s).replace(/[&<>"]/g,function(c){
-    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
-  });
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function note(id,msg,kind){ var el=$(id); el.textContent = msg||""; el.className = "note"+(kind?" "+kind:""); }
+function progress(label, frac){
+  $("prog").classList.add("on");
+  $("progTxt").textContent = label;
+  $("progFill").style.width = Math.round(Math.max(0,Math.min(1,frac))*100) + "%";
 }
-function note(id,msg,kind){
-  var el=$(id); el.textContent=msg||""; el.className="note"+(kind?" "+kind:"");
-}
-function prog(on, text, pct){
-  $("prog").classList.toggle("on", !!on);
-  if(text) $("progTxt").textContent = text;
-  if(pct != null) $("progFill").style.width = Math.round(pct)+"%";
-}
-function preview(canvasId, src, rect){
-  var c = $(canvasId), x = c.getContext("2d");
-  var w = Math.min(src.width, 1100), s = w/src.width;
-  c.width = w; c.height = Math.round(src.height*s);
-  x.drawImage(src, 0, 0, c.width, c.height);
-  if(rect){
-    x.save();
-    x.strokeStyle = "#E0A22E"; x.lineWidth = Math.max(3, w/240);
-    x.strokeRect(rect.x*s, rect.y*s, rect.w*s, rect.h*s);
-    x.restore();
-  }
-}
+function progressOff(){ $("prog").classList.remove("on"); }
 
 fetch("items.json",{cache:"no-store"})
   .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-  .then(function(rows){ rows.forEach(function(r){
-    var k=digitsOnly(r.item); if(k) items[k]=r; }); })
+  .then(function(rows){ rows.forEach(function(r){ var k=digitsOnly(r.item); if(k) items[k]=r; }); })
   .catch(function(){});
 
 /* ================= STEP 1 ================= */
 function submitJob(){
-  var job=$("job").value.trim(), item=$("item").value.trim(), ik=digitsOnly(item);
+  var job = $("job").value.trim(), item = $("item").value.trim(), ik = digitsOnly(item);
   if(!job){ note("jobmsg","Enter the Job #.","warn"); $("job").focus(); return; }
-  if(!ik){ note("jobmsg","Enter the Item # from the Art Proof Approval.","warn"); $("item").focus(); return; }
+  if(ik.length !== 9){ note("jobmsg","Enter the full Item # as printed under the artwork, e.g. 10-9813960.","warn"); $("item").focus(); return; }
   note("jobmsg","");
   var rec = items[ik] || {};
-  current = { job:job, item:rec.item||item, itemDigits:ik,
-              descriptor:rec.descriptor||"", customer:rec.customer||"" };
+  current = { job:job, item:fmtItem(ik), itemDigits:ik, descriptor:rec.descriptor||"", customer:rec.customer||"" };
   $("tItem").textContent = current.item;
   $("tDesc").textContent = current.descriptor || "—";
   $("tCust").textContent = current.customer || "—";
   $("target").hidden = false;
   $("s2").classList.remove("locked");
-  $("shootProof").disabled = false;
-  $("shootProof").classList.add("hot");
+  $("shootProof").disabled = false; $("shootProof").classList.add("hot");
   hideSlab();
   $("s2").scrollIntoView({behavior:"smooth", block:"start"});
 }
@@ -393,260 +372,285 @@ $("job").addEventListener("input", resetAll);
 $("item").addEventListener("input", resetAll);
 
 function resetAll(){
-  current=null; proofImg=null; proofWords=null; artRect=null; pressImg=null; result=null;
-  $("target").hidden=true; $("findings").hidden=true;
-  ["s2","s3"].forEach(function(s){ $(s).classList.add("locked"); });
-  $("shootProof").disabled=true; $("shootProof").classList.remove("hot");
-  $("shootPress").disabled=true; $("shootPress").classList.remove("hot");
-  $("validate").classList.remove("hot");
-  $("shotProof").classList.remove("on"); $("shotPress").classList.remove("on");
+  current = null; result = null;
+  proof = { img:null, words:null, onSheet:[], box:null }; press = { img:null, words:null, box:null }; bubbles = null;
+  $("target").hidden = true; $("findings").hidden = true;
+  $("s2").classList.add("locked"); $("s3").classList.add("locked");
+  $("shootProof").disabled = true; $("shootProof").classList.remove("hot");
+  $("shootPress").disabled = true; $("shootPress").classList.remove("hot");
+  $("thumbProof").classList.remove("on"); $("thumbPress").classList.remove("on");
   note("proofmsg",""); note("pressmsg","");
   hideSlab();
+}
+
+/* ================= thumbnails ================= */
+function thumb(canvasId, img, box){
+  var cv = $(canvasId), w = 900, s = w/img.w;
+  cv.width = w; cv.height = Math.round(img.h*s);
+  var x = cv.getContext("2d");
+  x.drawImage(img.src, 0,0,img.w,img.h, 0,0,cv.width,cv.height);
+  if(box){
+    x.save();
+    x.strokeStyle = "#E0A22E"; x.lineWidth = 6;
+    x.strokeRect(box.x*s, box.y*s, box.w*s, box.h*s);
+    x.restore();
+  }
 }
 
 /* ================= STEP 2: proof ================= */
 $("shootProof").addEventListener("click", function(){ $("fileProof").click(); });
 $("retakeProof").addEventListener("click", function(){ $("fileProof").click(); });
 $("fileProof").addEventListener("change", function(e){
-  var f=e.target.files && e.target.files[0]; e.target.value="";
+  var f = e.target.files && e.target.files[0]; e.target.value = "";
   if(!f || busy) return;
+  hideSlab(); $("findings").hidden = true; lockStep3();
+  note("proofmsg","");
   busy = true;
-  note("proofmsg",""); hideSlab(); $("findings").hidden=true;
-  lockStep3();
-  prog(true, "Reading the proof", 0);
-
-  window.PlateOCR.loadPhoto(f).then(function(canvas){
-    proofImg = canvas;
-    $("shotProof").classList.add("on");
+  progress("Loading photo", 0.02);
+  window.PlatePipeline.loadOriented(f).then(function(img){
+    proof.img = img;
+    thumb("cvProof", img, null);
+    $("thumbProof").classList.add("on");
+    $("capProof").textContent = "Reading the sheet…";
     $("shootProof").classList.remove("hot");
-    preview("cvProof", proofImg, null);
-    // single greyscale pass is enough to find the item number
-    return window.PlateOCR.read(proofImg, null, TESS, function(p){
-      prog(true, "Finding the Item #", 10 + p*80);
-    }, ["gray"]);
-  }).then(function(words){
-    proofWords = words;
-    artRect = window.PlateOCR.findArtwork(words, current.itemDigits, proofImg);
-    if(!artRect){
-      var seen = words.filter(function(w){
-        return w.alts.some(function(a){ return /^\d{2}-?\d{7}$/.test(String(a).replace(/[^\d-]/g,"")); });
-      }).map(function(w){ return fmtItem(digitsOnly(w.text)); });
-      note("proofmsg", seen.length
-        ? "Item " + current.item + " was not found on this proof. It shows " +
-          seen.slice(0,4).join(", ") + ". Check you have the right Art Proof Approval."
-        : "No item number could be read on this proof. Retake it flatter, with glare off the "+
-          "number below the artwork.", "warn");
+    return window.PlatePipeline.readProof(Tesseract, TESS, img, current.item, function(p){
+      progress(p < 0.35 ? "Finding the item number" : "Reading the artwork", 0.05 + p*0.93);
+    });
+  }).then(function(res){
+    proof.onSheet = res.onSheet;
+    if(!res.found){
+      proof.words = null;
+      $("capProof").textContent = "Item number not found under any artwork.";
+      note("proofmsg", res.onSheet.length
+        ? "This sheet shows " + res.onSheet.map(fmtItem).join(" and ") + " under the artwork, not " + current.item + ". Confirm you have the right Art Proof Approval."
+        : "No item number could be read under the artwork. Retake flatter, with glare off the number.", "warn");
       return;
     }
-    preview("cvProof", proofImg, artRect);
-    note("proofmsg", "Item " + current.item + " found. Artwork located — boxed above.", "good");
+    proof.words = res.words; proof.box = res.box;
+    thumb("cvProof", proof.img, res.box);
+    $("capProof").textContent = "Artwork located for " + current.item + " · " + res.words.length + " words read";
+    note("proofmsg", "Item " + current.item + " confirmed on this proof" +
+      (res.onSheet.length > 1 ? " (one of " + res.onSheet.length + " items on the sheet)." : "."), "good");
     $("s3").classList.remove("locked");
-    $("shootPress").disabled = false;
-    $("shootPress").classList.add("hot");
+    $("shootPress").disabled = false; $("shootPress").classList.add("hot");
     $("s3").scrollIntoView({behavior:"smooth", block:"start"});
   }).catch(function(err){
-    note("proofmsg","Could not read the proof: " + (err.message||"reader error"), "warn");
-  }).then(function(){ busy=false; prog(false); });
+    note("proofmsg", "The proof could not be processed: " + (err.message||"reader error") + ". Retake it.", "warn");
+  }).then(function(){ busy = false; progressOff(); });
 });
 function lockStep3(){
   $("s3").classList.add("locked");
-  $("shootPress").disabled = true;
-  $("shootPress").classList.remove("hot");
+  $("shootPress").disabled = true; $("shootPress").classList.remove("hot");
 }
 
-/* ================= STEP 3: press sample ================= */
+/* ================= STEP 3: press ================= */
 $("shootPress").addEventListener("click", function(){ $("filePress").click(); });
 $("retakePress").addEventListener("click", function(){ $("filePress").click(); });
 $("filePress").addEventListener("change", function(e){
-  var f=e.target.files && e.target.files[0]; e.target.value="";
+  var f = e.target.files && e.target.files[0]; e.target.value = "";
   if(!f || busy) return;
-  note("pressmsg","");
-  window.PlateOCR.loadPhoto(f).then(function(canvas){
-    pressImg = canvas;
-    $("shotPress").classList.add("on");
-    $("shootPress").classList.remove("hot");
-    $("validate").classList.add("hot");
-    preview("cvPress", pressImg, null);
-    hideSlab(); $("findings").hidden=true;
-    $("validate").scrollIntoView({behavior:"smooth", block:"center"});
-  }).catch(function(err){
-    note("pressmsg","Could not open that photo: " + (err.message||""), "warn");
-  });
-});
-
-/* ================= VALIDATE ================= */
-$("validate").addEventListener("click", function(){
-  if(busy) return;
-  if(!artRect){ note("pressmsg","Photograph the proof first.","warn"); return; }
-  if(!pressImg){ note("pressmsg","Photograph the press sample first.","warn"); return; }
-  if(!window.CopyCheck){ note("pressmsg","copycheck.js did not load. Reload the page.","warn"); return; }
-
-  busy = true; note("pressmsg","");
   hideSlab(); $("findings").hidden = true;
-  prog(true, "Reading the proof artwork", 0);
-
-  var pw = null;
-  window.PlateOCR.read(proofImg, artRect, TESS, function(p, ch){
-    prog(true, "Reading the proof artwork (" + ch + ")", p*48);
-  }).then(function(words){
-    pw = words;
-    prog(true, "Reading the press sample", 50);
-    return window.PlateOCR.read(pressImg, null, TESS, function(p, ch){
-      prog(true, "Reading the press sample (" + ch + ")", 50 + p*48);
+  note("pressmsg","");
+  busy = true;
+  progress("Loading photo", 0.02);
+  window.PlatePipeline.loadOriented(f).then(function(img){
+    press.img = img;
+    thumb("cvPress", img, null);
+    $("thumbPress").classList.add("on");
+    $("capPress").textContent = "Finding the label…";
+    $("shootPress").classList.remove("hot");
+    return window.PlatePipeline.readPress(Tesseract, TESS, img, function(p){
+      progress("Reading the press sample", 0.05 + p*0.93);
     });
-  }).then(function(sw){
-    prog(true, "Comparing copy", 99);
-    result = window.CopyCheck.compare({words:pw}, {words:sw});
+  }).then(function(res){
+    if(res.multi){
+      press.words = null;
+      thumb("cvPress", press.img, null);
+      $("capPress").textContent = "Several labels are in frame.";
+      note("pressmsg","This photo shows more than one label. Photograph a single label filling the frame, on a dark flat surface, and try again.","warn");
+      return;
+    }
+    press.words = res.words; press.box = res.box;
+    thumb("cvPress", press.img, res.box.whole ? null : res.box);
+    $("capPress").textContent = (res.box.whole ? "Whole photo used" : "Label located") + " · " + res.words.length + " words read";
     decide();
   }).catch(function(err){
-    note("pressmsg","The comparison failed: " + (err.message||"reader error"), "warn");
-  }).then(function(){ busy=false; prog(false); });
+    note("pressmsg", "The press sample could not be processed: " + (err.message||"reader error") + ". Retake it.", "warn");
+  }).then(function(){ busy = false; progressOff(); });
 });
 
+/* ================= VERDICT ================= */
+var KIND = { changed:"Changed", missing:"Missing on press", extra:"Extra on press" };
+
 function decide(){
-  var r = result, n = r.findings.length;
-  var cov = Math.round((r.coverage||0)*100);
-  var verdict, headline, detail;
+  var r = window.CopyCheck.compare({ words: proof.words }, { words: press.words });
+  result = r;
+
+  bubbles = null;
+  if(window.BubbleCheck && proof.box && press.box){
+    try { bubbles = window.BubbleCheck.compare(proof.img, proof.box, press.img, press.box); }
+    catch(e){ bubbles = null; }
+  }
+  var bubDiff = bubbles ? bubbles.bubbles.filter(function(b){ return b.status==="differs"; }).length : 0;
+  var bubUnres = bubbles ? bubbles.bubbles.filter(function(b){ return b.status==="unresolved"; }).length : 0;
+
+  var n = r.findings.length, verdict, headline, detail;
 
   if(r.unreadable){
     verdict="hold"; headline="Could not read";
-    detail = "Too little copy could be read with confidence. Retake both photos closer and "+
-             "flatter, with glare off the type, then validate again.";
-  } else if(n > 0){
-    verdict="stop"; headline="Stop — copy differs";
-    detail = n + (n===1?" copy difference":" copy differences") + " between the press sample and "+
-             "the proof for item " + current.item + ". Review below before running more material.";
-  } else if(cov < 45){
-    verdict="hold"; headline="Partial check";
-    detail = "No copy differences found, but only about " + cov + "% of the proof's wording could "+
-             "be read and compared. This is not a clean pass — check the label by eye, or retake "+
-             "with better light and less glare.";
+    detail = "Too little text could be read with confidence on one of the photos. Retake with the label filling the frame, flat, and free of glare.";
+  } else if(n === 0 && bubDiff > 0){
+    verdict="stop"; headline="Stop — numbers differ";
+    detail = "The wording matches, but " + bubDiff + (bubDiff===1 ? " nutrition callout" : " nutrition callouts") +
+             " on the press sample " + (bubDiff===1 ? "does" : "do") + " not match the proof for item " + current.item +
+             ". See the highlighted callouts below and read the values by eye.";
+  } else if(n === 0){
+    if(r.coverage < 0.5){
+      verdict="hold"; headline="Partial check";
+      detail = "No copy differences were found, but only " + Math.round(r.coverage*100) + "% of the proof's words could be verified against the press sample. Check the small type by eye before running.";
+    } else {
+      verdict="go"; headline="Copy matches";
+      detail = "Item " + current.item + " is confirmed on the proof and every word read on the press sample agrees with the proof artwork.";
+    }
   } else {
-    verdict="go"; headline="Copy matches";
-    detail = "The wording read on the press sample matches the proof for item " + current.item +
-             ". About " + cov + "% of the proof's copy was verified; the rest could not be read "+
-             "and should be spot-checked by eye.";
+    verdict="stop"; headline="Stop — copy differs";
+    detail = n + (n===1 ? " copy difference" : " copy differences") + " between the press sample and the proof for item " + current.item + "." +
+             (r.numericFindings ? " " + r.numericFindings + " involve numbers." : "") +
+             (bubDiff ? " " + bubDiff + " nutrition callout" + (bubDiff===1?"":"s") + " also differ." : "") +
+             " Review below before running more material.";
+  }
+  if(verdict === "go" && bubUnres > 0){
+    verdict = "hold"; headline = "Check callouts";
+    detail += " " + bubUnres + " nutrition callout" + (bubUnres===1 ? " could" : "s could") + " not be compared — verify by eye.";
   }
 
-  var s=$("slab");
+  var s = $("slab");
   s.className = "slab on is-" + verdict;
   $("call").textContent = headline;
   $("sub").textContent = detail;
   $("cItem").textContent = current.item;
-  $("cDiff").textContent = r.unreadable ? "—" : String(n);
-  $("validate").classList.remove("hot");
+  $("cProof").textContent = proof.onSheet.length ? proof.onSheet.map(fmtItem).join("  ") : "—";
+  $("cDiff").textContent = r.unreadable ? "—" : String(n + bubDiff);
 
-  showFindings(r, cov);
-  fillReport(verdict, r, cov);
+  showFindings(r);
+  showBubbles(bubbles);
+  fillReport(verdict, r);
   record(verdict, r.unreadable ? "" : n);
   s.scrollIntoView({behavior:"smooth", block:"center"});
 }
 
-function showFindings(r, cov){
+function diffRows(findings, cls){
+  var html = "<thead><tr><th>What</th><th>Proof says</th><th>Press says</th></tr></thead><tbody>";
+  findings.forEach(function(f){
+    html += "<tr><td class='k'>" + esc(KIND[f.kind]||f.kind) + "</td>" +
+            "<td class='" + (cls?"p":"") + "'>" + (f.proof ? esc(f.proof) : "—") + "</td>" +
+            "<td class='s'>" + (f.press ? esc(f.press) : "—") + "</td></tr>";
+  });
+  return html + "</tbody>";
+}
+function showFindings(r){
   var tbl = $("cdiff");
-  if(r.findings.length){
-    var html = "<thead><tr><th>Proof says</th><th>Press says</th><th></th></tr></thead><tbody>";
-    r.findings.forEach(function(f){
-      html += "<tr><td class='p'>" + (f.proof ? esc(f.proof) : "—") + "</td>" +
-              "<td class='s'>" + (f.press ? esc(f.press) : "—") + "</td>" +
-              "<td class='n'>" + (f.numeric ? "number" : "") + "</td></tr>";
-    });
-    tbl.innerHTML = html + "</tbody>";
-    tbl.hidden = false;
-  } else {
-    tbl.innerHTML = "";
-    tbl.hidden = true;
-  }
-  $("cover").textContent = r.unreadable
-    ? "Not enough copy could be read to compare."
-    : "About " + cov + "% of the proof's wording was read and compared. Reversed type on coloured "+
-      "bands and very small legal type often cannot be read — those words were not compared and "+
-      "must be checked by eye. Colour and print quality are not evaluated.";
+  if(r.findings.length){ tbl.innerHTML = diffRows(r.findings, true); tbl.hidden = false; }
+  else { tbl.innerHTML = ""; tbl.hidden = true; }
+  $("disclaim").textContent = r.unreadable
+    ? "Wording only. Nothing was compared on this attempt."
+    : "Wording only. Layout, print quality, registration and colour are not evaluated." +
+      (r.unverified ? " " + r.unverified + " word" + (r.unverified===1?"":"s") + " could be read on only one side and were not compared." : "");
   $("findings").hidden = false;
 }
+function showBubbles(b){
+  var wrap = $("bubWrap"), row = $("bubrow");
+  row.innerHTML = "";
+  if(!b || !b.bubbles.length){ wrap.hidden = true; return; }
+  b.bubbles.forEach(function(e, i){
+    var card = document.createElement("div");
+    card.className = "bub " + e.status;
+    var tag = e.status === "differs" ? "Differs" : e.status === "same" ? "Same" : "Not compared";
+    card.innerHTML = "<span class='tag'>" + (i+1) + " · " + tag + "</span>" +
+                     "<div class='pair'><div>Proof</div><div>Press</div></div>";
+    var pair = document.createElement("div"); pair.className = "pair";
+    pair.appendChild(e.proofCrop || blank()); pair.appendChild(e.pressCrop || blank());
+    card.appendChild(pair);
+    if(e.score != null){ var sc = document.createElement("p"); sc.className="sc"; sc.textContent = "shape mismatch " + e.score.toFixed(3); card.appendChild(sc); }
+    row.appendChild(card);
+  });
+  $("bubnote").textContent = "These small numbers are compared as shapes, not read. A red card means the value on the press sample is not the value on the proof — read both and confirm." +
+    (b.countMismatch ? " The two photos show different numbers of callouts (" + b.proofCount + " vs " + b.pressCount + "); unmatched ones are marked Not compared." : "");
+  wrap.hidden = false;
+}
+function blank(){ var c = document.createElement("canvas"); c.width=140; c.height=100; return c; }
 function hideSlab(){ $("slab").className = "slab"; }
 
-/* ================= PRINT RECORD ================= */
-var VL = { go:"MATCH", stop:"STOP", hold:"REVIEW" };
-function fillReport(verdict, r, cov){
-  var now = new Date();
-  $("rVerdict").textContent = VL[verdict] || "—";
-  $("rJob").textContent = current.job;
-  $("rItem").textContent = current.item;
-  $("rCust").textContent = current.customer || "—";
-  $("rWhen").textContent = now.toLocaleDateString() + "  " +
-                           now.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
-  $("rCov").textContent = r.unreadable ? "—" : (cov + "% of proof copy");
-  $("rDetail").textContent = $("sub").textContent;
-
-  var host = $("rDiffs");
-  if(r.findings.length){
-    var html = "<table class='rpt-diff'><thead><tr><th>Proof says</th><th>Press says</th>"+
-               "</tr></thead><tbody>";
-    r.findings.forEach(function(f){
-      html += "<tr><td>" + (f.proof?esc(f.proof):"—") + "</td>" +
-              "<td class='s'>" + (f.press?esc(f.press):"—") + "</td></tr>";
-    });
-    host.innerHTML = html + "</tbody></table>";
-  } else {
-    host.innerHTML = "<p class='rpt-clean'>" +
-      (r.unreadable ? "Not compared — too little copy could be read."
-                    : "None found in the copy that could be read.") + "</p>";
-  }
-}
-$("print").addEventListener("click", function(){ window.print(); });
-
-function record(verdict, diffs){
-  var row = { t:new Date().toISOString(), job:current.job, item:current.item,
-              cust:current.customer||"", diffs:diffs, v:verdict };
-  if(window.PlateSync){ try { window.PlateSync.send(row); } catch(e){} }
-}
-
 $("next").addEventListener("click", function(){
-  $("job").value=""; $("item").value="";
+  $("job").value = ""; $("item").value = "";
   resetAll(); note("jobmsg","");
   $("job").focus();
   $("s1").scrollIntoView({behavior:"smooth", block:"start"});
 });
 
+/* ================= PRINT ================= */
+var VERDICT_LABEL = { go:"MATCH", stop:"STOP", hold:"REVIEW" };
+function fillReport(verdict, r){
+  var now = new Date();
+  $("rVerdict").textContent = VERDICT_LABEL[verdict] || "—";
+  $("rJob").textContent = current.job;
+  $("rItem").textContent = current.item;
+  $("rCust").textContent = current.customer || "—";
+  $("rWhen").textContent = now.toLocaleDateString() + "  " + now.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+  $("rOnProof").textContent = proof.onSheet.length ? proof.onSheet.map(fmtItem).join(", ") : "not read";
+  $("rDetail").textContent = $("sub").textContent;
+  var rb = $("rBub");
+  if(bubbles && bubbles.bubbles.length){
+    var bh = "<table class='rpt-diff'><thead><tr><th>Callout</th><th>Result</th><th>Shape mismatch</th></tr></thead><tbody>";
+    bubbles.bubbles.forEach(function(e,i){
+      bh += "<tr><td class='k'>" + (i+1) + "</td><td class='" + (e.status==="differs"?"s":"") + "'>" +
+            (e.status==="differs" ? "DIFFERS — read both values" : e.status==="same" ? "Same" : "Not compared — verify by eye") +
+            "</td><td>" + (e.score==null ? "—" : e.score.toFixed(3)) + "</td></tr>";
+    });
+    rb.innerHTML = bh + "</tbody></table>";
+  } else {
+    rb.innerHTML = "<p class='rpt-clean'>No nutrition callouts were found to compare.</p>";
+  }
+  $("rDiffs").innerHTML = r.findings.length
+    ? "<table class='rpt-diff'>" + diffRows(r.findings, false) + "</table>"
+    : "<p class='rpt-clean'>" + (r.unreadable ? "Not compared — too little text could be read with confidence."
+                                              : "None. Every word read on the press sample agrees with the proof artwork.") + "</p>";
+}
+$("print").addEventListener("click", function(){ window.print(); });
+
+function record(verdict, diffs){
+  var row = { t:new Date().toISOString(), job:current.job, item:current.item, cust:current.customer||"",
+              proof:proof.onSheet.map(fmtItem).join(" "), diffs:diffs, v:verdict };
+  if(window.PlateSync){ try { window.PlateSync.send(row); } catch(e){} }
+}
+
 /* ================= SELF-CHECK ================= */
 (function(){
-  var host=$("diagList"), panel=$("diag"), bad=false;
-  function row(state,text){
-    var li=document.createElement("li");
-    li.className=state;
-    li.innerHTML="<span>"+(state==="ok"?"\u2713":state==="bad"?"\u2717":"!")+
-                 "</span><span>"+esc(text)+"</span>";
-    host.appendChild(li);
-    if(state==="bad") bad=true;
+  var host = $("diagList"), panel = $("diag"), bad = false;
+  function row(state, text){
+    var li = document.createElement("li"); li.className = state;
+    li.innerHTML = "<span>" + (state==="ok" ? "\u2713" : state==="bad" ? "\u2717" : "!") + "</span><span>" + esc(text) + "</span>";
+    host.appendChild(li); if(state==="bad") bad = true;
   }
-  var p=location.protocol;
-  row(p==="file:"?"bad":"ok", p==="file:"
-    ? "Opened as a local file (file://). Serve over http:// or https:// — GitHub Pages works."
+  var p = location.protocol;
+  row(p==="file:" ? "bad" : "ok", p==="file:"
+    ? "Opened as a local file. Serve over https — GitHub Pages works."
     : "Served over " + p.replace(":","") + " — correct.");
-  fetch("items.json",{cache:"no-store"}).then(function(r){
-    if(!r.ok) throw new Error("HTTP "+r.status); return r.json();
-  }).then(function(rows){ row("ok","Item table loaded ("+rows.length+" items)."); })
-    .catch(function(e){ row("warn","Item table not loaded ("+e.message+
-      "). The app still runs; descriptor and customer will be blank."); });
-  row(typeof Tesseract!=="undefined"?"ok":"bad", typeof Tesseract!=="undefined"
-    ? "Text reader present." : "Text reader did not load from the CDN. Check the network, then reload.");
-  row(window.PlateOCR?"ok":"bad", window.PlateOCR
-    ? "Image reader present." : "ocr.js did not load — confirm it sits next to index.html.");
-  row(window.CopyCheck?"ok":"bad", window.CopyCheck
-    ? "Copy-check engine present." : "copycheck.js did not load — confirm it sits next to index.html.");
-  row(typeof createImageBitmap==="function"?"ok":"warn", typeof createImageBitmap==="function"
-    ? "Photo orientation handled precisely."
-    : "Older browser — photo rotation falls back to a guess. Update iPadOS if photos read oddly.");
-  var fi=document.createElement("input"); fi.type="file";
-  row(("capture" in fi)?"ok":"warn", ("capture" in fi)
-    ? "Camera capture supported." : "This browser may open the photo library instead of the camera.");
-  try{
-    var c=document.createElement("canvas"); c.width=2400; c.height=1800;
-    var g=c.getContext("2d"); g.fillRect(0,0,1,1);
-    row(g.getImageData(0,0,1,1).data[3]===255?"ok":"bad","Canvas of 2400\u00d71800 works.");
-  }catch(e){ row("bad","Canvas test failed: "+e.message); }
-  if(bad){ panel.setAttribute("data-bad","1"); panel.open=true; }
+  fetch("items.json",{cache:"no-store"}).then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+    .then(function(rows){ row("ok","Item table loaded (" + rows.length + " items)."); })
+    .catch(function(e){ row("warn","Item table not loaded (" + e.message + "). Descriptor and customer will show blank."); });
+  row(typeof Tesseract !== "undefined" ? "ok" : "bad", typeof Tesseract !== "undefined" ? "Text reader present." : "Text reader did not load from the CDN.");
+  row(window.PlatePipeline ? "ok" : "bad", window.PlatePipeline ? "Image pipeline present." : "pipeline.js did not load — confirm it sits next to index.html.");
+  row(window.CopyCheck ? "ok" : "bad", window.CopyCheck ? "Copy-check engine present." : "copycheck.js did not load — confirm it sits next to index.html.");
+  row(window.BubbleCheck ? "ok" : "warn", window.BubbleCheck ? "Callout comparison present." : "bubbles.js did not load — nutrition callouts will not be compared.");
+  row(typeof createImageBitmap === "function" ? "ok" : "warn", typeof createImageBitmap === "function"
+    ? "Photo orientation handling available." : "Older browser: photo orientation relies on the browser. If reads fail, hold the device upright.");
+  var fi = document.createElement("input"); fi.type = "file";
+  row(("capture" in fi) ? "ok" : "warn", ("capture" in fi) ? "Camera capture supported." : "This browser may open the photo library instead of the camera.");
+  try{ var c=document.createElement("canvas"); c.width=2600; c.height=2600; var g=c.getContext("2d"); g.fillRect(0,0,1,1);
+       row(g.getImageData(0,0,1,1).data[3]===255 ? "ok" : "bad", "Canvas of 2600\u00d72600 works."); }
+  catch(e){ row("bad","Canvas test failed: " + e.message); }
+  if(bad){ panel.setAttribute("data-bad","1"); panel.open = true; }
 })();
 
 })();
