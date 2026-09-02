@@ -62,26 +62,52 @@ not found in the table is treated as the target code.
 
 ---
 
+## How it works
+
+The operator enters Job # and Item #, photographs the proof sheet, then photographs one press
+label. No boxing, no cropping.
+
+**Step 2** reads the whole proof in greyscale and finds the Item # printed directly below the
+artwork. Occurrences next to "Product Number" in the approval form are skipped, so a sheet with
+two approval blocks resolves to the right one. The artwork region above that caption becomes the
+comparison area and is outlined on screen.
+
+**Step 3** wants ONE label filling the frame, flat. This matters more than anything in the code:
+measured on real photos, a whole-web shot yielded 5 readable critical tokens; one label close up
+yielded 23.
+
+**Validate** reads both regions and compares the wording.
+
+## Why three colour channels
+
+Reversed type — white on the blue and light-blue bands — has almost no luminance contrast, so
+greyscale OCR cannot see it. Blue ink is dark in the RED channel, which is what makes the artwork
+code and nutrition figures readable. Measured on a real proof/press pair:
+
+| Passes | Coverage | Findings | False |
+|---|---|---|---|
+| grey | 35% | 3 | 2 |
+| grey + red | 59% | 2 | 1 |
+| grey + red + blue | 63% | 1 | 0 |
+| + green | 63% | 1 | 0 |
+
+Three passes per region is the recipe; a fourth buys nothing.
+
 ## How the verdict is decided
 
-Three outcomes. The tool never prints a pass it cannot support.
+Only a two-sided CONFLICT counts as a copy difference — a word read confidently on both sides
+where the two disagree. A word read on one side but not the other is a reading gap, not a
+difference, and is counted rather than reported. On real photos this removed five of seven false
+findings without losing a real one.
 
-**MATCH** — the expected code was found on the label.
+Numbers must match EXACTLY; alphabetic words tolerate known OCR glyph confusions. A 170/180
+calorie difference is one character and is exactly what this exists to catch.
 
-**STOP — codes differ** — a different code of the same length was found. This is the plate error
-the tool exists to catch.
+Every reading of a word is kept as a candidate, and a match against any candidate clears it. This
+is what stops "737g" misread once as "73%" from inventing a difference.
 
-**NO READ** — no code-shaped digits were found. Not a pass and not a fail. The operator retakes
-the photo or drags a box around the code to re-read just that area.
-
-There is a fourth path worth knowing about. `descriptor` guards a specific trap: if a job's
-descriptor is *Salted* and the label reads *Lightly Salted*, a naive text match would pass,
-because "Salted" is contained inside "Lightly Salted". When the expected code is found but a
-longer, related descriptor belonging to a different job also appears on the label, the tool
-returns **STOP — copy conflict** instead of a match. This only works for descriptors that are
-present in `items.json`, which is a reason to keep variant families complete in the table.
-
----
+**Verdicts:** STOP (copy differs) · REVIEW (could not read, or coverage under 45%) ·
+MATCH (copy agrees). A clean result at low coverage is reported as a partial check, not a pass.
 
 ## Limits worth knowing before this goes on the floor
 

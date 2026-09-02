@@ -1,14 +1,20 @@
 [
   {
+    "item": "10-9817938",
+    "code": "110068",
+    "descriptor": "Lightly Salted",
+    "customer": "Meijer — Whole-Roasted Cashews 26 oz (front label)"
+  },
+  {
+    "item": "10-9817939",
+    "code": "110069",
+    "descriptor": "Lightly Salted — nutrition panel",
+    "customer": "Meijer — Whole-Roasted Cashews 26 oz (info label)"
+  },
+  {
     "item": "10-9813960",
     "code": "109709",
     "descriptor": "Salted",
-    "customer": "Meijer — Whole-Roasted Cashews 26 oz"
-  },
-  {
-    "item": "10-9813961",
-    "code": "110068",
-    "descriptor": "Lightly Salted",
-    "customer": "Meijer — Whole-Roasted Cashews 26 oz"
+    "customer": "Meijer — Whole-Roasted Cashews 26 oz (front label)"
   }
 ]
