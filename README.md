@@ -13,6 +13,8 @@ Runs entirely in the browser. No server, no build step, no install.
 1. Create a repository (public or private — Pages works with private repos on paid plans).
 2. Commit these three files to the repository root:
    - `index.html`
+   - `copycheck.js`
+   - `sync.js`
    - `items.json`
    - `README.md`
 3. In the repo: **Settings → Pages**. Under *Build and deployment*, set **Source** to
@@ -95,10 +97,18 @@ for that control.
 photo does not become a false pass, but a shop-floor fixture — fixed camera distance, even
 lighting, label held flat under glass — will do more for reliability than any change to this code.
 
-**The log is per-device.** A static site has nowhere central to write. Checks are stored in the
-tablet's own browser storage and are lost if the browser data is cleared or the device is
-replaced. Export the CSV on a routine if these records need to survive, or move logging to a
-Google Form or SharePoint list endpoint, which is a small change to the `record()` function.
+**Records are printed, not stored.** There is no log and no CSV export. After a check, the
+operator taps Print result and a one-page record comes out with the job, item, verdict, the copy
+differences, reader coverage, and signature lines for the operator and supervisor. Staple it to
+the job jacket. A signed sheet in the jacket is a stronger audit artefact than browser storage
+that dies with the device.
+
+If a digital record is wanted alongside the paper one, `sync.js` still mirrors each check to a
+SharePoint list independently — see SHAREPOINT-SETUP.md. It is off by default.
+
+**Printing needs AirPrint.** Safari on iPad can only print to AirPrint-capable printers on the
+same network. If the shop printer is not AirPrint, the iPad cannot reach it directly; options are
+a print server, an AirPrint bridge, or printing from a PC on the same page.
 
 **First load needs internet.** The text-recognition engine and its English language data come
 from a CDN on first use, a few megabytes. The browser caches them afterward, but a device that

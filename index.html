@@ -108,7 +108,7 @@
   .slab.is-stop{background:var(--stop)}
   .slab.is-stop .bar{background:repeating-linear-gradient(45deg,#1a1a1a 0 14px,#F2C200 14px 28px)}
   .slab.is-hold{background:var(--hold)} .slab.is-hold .bar{background:#7d5104}
-  .slab .again{margin:18px 0 0}
+  .slab .again{margin:18px 0 0;display:flex;gap:8px;flex-wrap:wrap}
 
   .prog{display:none;padding:18px;background:var(--card);border-bottom:1px solid var(--steel)}
   .prog.on{display:block}
@@ -119,9 +119,23 @@
 
   .findings{padding:0 18px 24px}
   .findings canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0;font-size:12px;color:var(--slate)}
-  .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;
-            margin-right:6px;vertical-align:-2px;border:2px solid var(--stop)}
+  .cdiff{width:100%;border-collapse:collapse;margin:0 0 4px}
+  .cdiff th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--slate);text-align:left;font-weight:700;padding:0 10px 8px 0;
+            border-bottom:2px solid var(--steel)}
+  .cdiff td{font-size:14px;padding:10px 10px 10px 0;border-bottom:1px solid var(--card);
+            vertical-align:top;line-height:1.35;word-break:break-word}
+  .cdiff td.p{color:var(--slate)}
+  .cdiff td.s{font-weight:700;color:var(--stop)}
+  .cdiff td.k{font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+              text-transform:uppercase;color:var(--gll);white-space:nowrap}
+  .rawbox{margin:14px 0 0;font-size:12px}
+  .rawbox summary{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+                  text-transform:uppercase;color:var(--slate);cursor:pointer}
+  .raw{margin:10px 0 0;line-height:1.5}
+  .raw b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+         text-transform:uppercase;color:var(--gll);margin-bottom:3px}
+  .raw span{color:var(--slate);word-break:break-word}
   .flist{margin:14px 0 0;padding:0;list-style:none}
   .flist li{font-size:13px;line-height:1.5;padding:8px 0;
             border-bottom:1px solid var(--card);display:flex;gap:10px}
@@ -141,6 +155,60 @@
   .tag.go{background:var(--go)} .tag.stop{background:var(--stop)} .tag.hold{background:var(--hold)}
   .log .empty{font-size:13px;color:var(--slate);margin:0;line-height:1.5}
   .log .foot{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
+  /* ---------- printable record ---------- */
+  #report{display:none}
+
+  @media print{
+    /* one clean page: drop every screen affordance */
+    body{background:#fff}
+    .wrap{max-width:none;min-height:0}
+    .top, #errbar, #diag, .step, .prog, .slab, .findings{display:none !important}
+    #report{display:block;padding:0;color:#000;font-size:10.5pt;line-height:1.35}
+
+    @page{margin:14mm 14mm 12mm}
+
+    .rpt-head{display:flex;justify-content:space-between;align-items:flex-start;
+              border-bottom:2.5pt solid #000;padding-bottom:7pt;margin-bottom:12pt}
+    .rpt-head h2{font-family:var(--disp);font-size:22pt;letter-spacing:.04em;
+                 text-transform:uppercase;margin:0;line-height:1}
+    .rpt-org{font-size:8.5pt;margin:3pt 0 0;color:#333}
+    .rpt-verdict{font-family:var(--disp);font-size:20pt;font-weight:700;letter-spacing:.04em;
+                 text-transform:uppercase;border:2.5pt solid #000;padding:4pt 12pt;white-space:nowrap}
+
+    .rpt-meta, .rpt-cov{width:100%;border-collapse:collapse;margin:0 0 11pt}
+    .rpt-meta th, .rpt-cov th{
+      text-align:left;font-size:7.5pt;letter-spacing:.09em;text-transform:uppercase;
+      color:#333;font-weight:700;padding:4pt 8pt 4pt 0;white-space:nowrap;
+      border-bottom:.5pt solid #999;width:1%}
+    .rpt-meta td, .rpt-cov td{
+      font-size:11.5pt;font-weight:700;padding:4pt 16pt 4pt 0;
+      border-bottom:.5pt solid #999}
+
+    .rpt-detail{font-size:10.5pt;margin:0 0 13pt;padding-left:8pt;border-left:2.5pt solid #000}
+    .rpt-h3{font-size:8pt;letter-spacing:.11em;text-transform:uppercase;
+            margin:0 0 5pt;padding-bottom:2pt;border-bottom:1pt solid #000}
+
+    table.rpt-diff{width:100%;border-collapse:collapse;margin:0 0 12pt}
+    table.rpt-diff th{font-size:7.5pt;letter-spacing:.08em;text-transform:uppercase;
+                      text-align:left;padding:0 8pt 3pt 0;border-bottom:1pt solid #000}
+    table.rpt-diff td{font-size:11pt;padding:5pt 8pt 5pt 0;border-bottom:.5pt solid #bbb;
+                      vertical-align:top}
+    table.rpt-diff td.k{font-size:7.5pt;letter-spacing:.06em;text-transform:uppercase;
+                        white-space:nowrap;color:#333}
+    table.rpt-diff td.s{font-weight:700}
+    .rpt-clean{font-size:11pt;margin:0 0 12pt}
+
+    .rpt-note{font-size:8pt;color:#333;margin:0 0 13pt;line-height:1.4}
+    .rpt-raw{font-size:8pt;margin:0 0 7pt;line-height:1.4;color:#222}
+    .rpt-raw b{display:block;font-size:7.5pt;letter-spacing:.09em;
+               text-transform:uppercase;color:#333;margin-bottom:1pt}
+
+    .rpt-sign{width:100%;border-collapse:separate;border-spacing:16pt 0;margin-top:20pt}
+    .rpt-sign td{font-size:7.5pt;letter-spacing:.09em;text-transform:uppercase;
+                 color:#333;padding-top:22pt;vertical-align:bottom}
+    .rpt-sign .ln{display:block;border-bottom:1pt solid #000;margin-bottom:3pt}
+  }
 
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -212,7 +280,7 @@
 
     <div class="shot" id="shotPress">
       <canvas id="cvPress"></canvas>
-      <p class="hint" id="hintPress">Drag a box around one label &mdash; box the same edges you used on the proof.</p>
+      <p class="hint" id="hintPress">Drag a box around one label. It only has to contain the copy &mdash; it does not need to match the proof box exactly.</p>
       <div class="tools">
         <button class="btn-min" id="clearPress">Clear box</button>
         <button class="btn-min" id="retakePress">Retake</button>
@@ -237,9 +305,11 @@
       <dl class="cmp">
         <div><dt>Item #</dt><dd id="cItem">&mdash;</dd></div>
         <div><dt>On proof</dt><dd id="cProof">&mdash;</dd></div>
-        <div><dt>Copy regions differing</dt><dd id="cDiff">&mdash;</dd></div>
+        <div><dt>Copy differences</dt><dd id="cDiff">&mdash;</dd></div>
       </dl>
       <div class="again">
+        <button class="btn-min" id="print"
+                style="border-color:#fff;color:#fff;font-weight:700">Print result</button>
         <button class="btn-min" id="next"
                 style="border-color:rgba(255,255,255,.6);color:#fff">Start next check</button>
       </div>
@@ -248,21 +318,66 @@
 
   <!-- FINDINGS -->
   <section class="findings" id="findings" hidden>
-    <p class="eyebrow" style="margin-top:22px">Differences found</p>
-    <canvas id="out"></canvas>
-    <div class="legend"><span><i></i>Copy difference</span></div>
+    <p class="eyebrow" style="margin-top:22px">Copy differences</p>
+    <table class="cdiff" id="cdiff"></table>
     <ul class="flist" id="flist"></ul>
-    <p class="disclaim">This compares copy only &mdash; text, layout and structure. Colour is not
-    evaluated: the Art Proof Approval is not a colour standard. Verify colour separately against
-    the job standard.</p>
+    <details class="rawbox" id="rawbox">
+      <summary>Text read from each</summary>
+      <p class="raw"><b>Proof</b><span id="rawProof"></span></p>
+      <p class="raw"><b>Press</b><span id="rawPress"></span></p>
+    </details>
+    <p class="disclaim">Wording only. Layout, print quality, registration and colour are not
+    evaluated. Small type the reader cannot resolve is skipped rather than guessed &mdash; check
+    the skipped-word count below.</p>
   </section>
 
-  <!-- LOG -->
-  <section class="log">
-    <p class="eyebrow">Check log
-      <b id="qbadge" hidden style="text-transform:none;letter-spacing:0;font-weight:600"></b></p>
-    <div id="logBody"><p class="empty">No checks recorded yet.</p></div>
-    <div class="foot"><button class="btn-min" id="csv">Export to CSV</button></div>
+  <!-- PRINT REPORT (screen-hidden, print-only) -->
+  <section id="report" aria-hidden="true">
+    <div class="rpt-head">
+      <div>
+        <h2>Plate Check Record</h2>
+        <p class="rpt-org">Great Lakes Label, LLC &middot; Comstock Park, MI</p>
+      </div>
+      <div class="rpt-verdict" id="rVerdict">&mdash;</div>
+    </div>
+
+    <table class="rpt-meta">
+      <tr><th>Job #</th><td id="rJob">&mdash;</td>
+          <th>Item #</th><td id="rItem">&mdash;</td></tr>
+      <tr><th>Customer</th><td id="rCust" colspan="3">&mdash;</td></tr>
+      <tr><th>Checked</th><td id="rWhen">&mdash;</td>
+          <th>Item # on proof</th><td id="rOnProof">&mdash;</td></tr>
+    </table>
+
+    <p class="rpt-detail" id="rDetail"></p>
+
+    <h3 class="rpt-h3">Copy differences</h3>
+    <div id="rDiffs"></div>
+
+    <h3 class="rpt-h3">Reader coverage</h3>
+    <table class="rpt-cov">
+      <tr><th>Words read &mdash; proof</th><td id="rWP">&mdash;</td>
+          <th>Words read &mdash; press</th><td id="rWS">&mdash;</td></tr>
+      <tr><th>Words agreeing</th><td id="rWM">&mdash;</td>
+          <th>Skipped as unclear</th><td id="rWD">&mdash;</td></tr>
+    </table>
+    <p class="rpt-note">Wording only. Layout, print quality, registration and colour are not
+    evaluated by this check. Skipped words were not compared and must be verified by eye.</p>
+
+    <h3 class="rpt-h3">Text read</h3>
+    <p class="rpt-raw"><b>Proof</b><span id="rTP"></span></p>
+    <p class="rpt-raw"><b>Press</b><span id="rTS"></span></p>
+
+    <table class="rpt-sign">
+      <tr>
+        <td><span class="ln"></span>Press operator</td>
+        <td><span class="ln"></span>Date / time</td>
+      </tr>
+      <tr>
+        <td><span class="ln"></span>Supervisor</td>
+        <td><span class="ln"></span>Date / time</td>
+      </tr>
+    </table>
   </section>
 
 </div>
@@ -291,7 +406,7 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="compare.js"></script>
+<script src="copycheck.js"></script>
 <!-- Uncomment only for MODE "graph" in sync.js -->
 <!-- <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script> -->
 <script src="sync.js"></script>
@@ -542,7 +657,7 @@ function verifyProof(){
     note("proofmsg","Item " + current.item + " confirmed on this proof" +
                     (proofOnFile.length > 1 ? " (one of " + proofOnFile.length + " approval blocks)." : "."),
          "good");
-    $("hintProof").textContent = "Now drag a box around the artwork on the proof.";
+    $("hintProof").textContent = "Now drag a box around the artwork on the proof, excluding the approval form.";
   }).catch(function(){
     note("proofmsg","The proof could not be read. Retake it with even light.","warn");
     lockStep3();
@@ -597,17 +712,28 @@ function lockStep3(){
   $("shootPress").classList.remove("hot");
 }
 
-/* ---------- prep a whole photo for OCR ---------- */
-function prepFull(which){
+/* ---------- prep for OCR ----------
+   prepFull: the whole photo (used to find the item number on the proof)
+   prepBox:  just the boxed artwork, upscaled, so small copy resolves    */
+function prepFull(which){ return prepRegion(which, null); }
+function prepBox(which){ return prepRegion(which, pane[which].rect); }
+
+function prepRegion(which, rect){
   var p = pane[which];
-  var target = 2000;
-  var scale = Math.min(3, Math.max(1, target / p.img.naturalWidth));
+  var k = p.img.naturalWidth / p.canvas.width;
+  var sx, sy, sw, sh;
+  if(rect){ sx=rect.x*k; sy=rect.y*k; sw=rect.w*k; sh=rect.h*k; }
+  else { sx=0; sy=0; sw=p.img.naturalWidth; sh=p.img.naturalHeight; }
+
+  // a boxed crop gets pushed harder: small legal type needs the pixels
+  var target = rect ? 2600 : 2000;
+  var scale = Math.min(4, Math.max(1, target / sw));
   var c = document.createElement("canvas");
-  c.width = Math.round(p.img.naturalWidth*scale);
-  c.height = Math.round(p.img.naturalHeight*scale);
+  c.width = Math.round(sw*scale);
+  c.height = Math.round(sh*scale);
   var x = c.getContext("2d");
   x.imageSmoothingQuality = "high";
-  x.drawImage(p.img, 0, 0, c.width, c.height);
+  x.drawImage(p.img, sx, sy, sw, sh, 0, 0, c.width, c.height);
 
   var d = x.getImageData(0,0,c.width,c.height), q = d.data, i, g, lo=255, hi=0;
   for(i=0;i<q.length;i+=4){
@@ -625,57 +751,75 @@ function prepFull(which){
 }
 
 /* ================= VALIDATE ================= */
+function ocr(canvas, label, from, to){
+  return Tesseract.recognize(canvas, "eng", {
+    workerPath:TESS.workerPath, corePath:TESS.corePath, langPath:TESS.langPath,
+    logger: function(m){
+      if(m.status === "recognizing text"){
+        $("progTxt").textContent = label;
+        $("progFill").style.width = Math.round(from + m.progress*(to-from)) + "%";
+      }
+    }
+  });
+}
+
 $("validate").addEventListener("click", function(){
   if(busy) return;
   if(!pane.proof.rect){ note("pressmsg","Box the artwork on the proof first.","warn"); return; }
   if(!pane.press.rect){ note("pressmsg","Box one label on the press sample first.","warn"); return; }
-  if(!window.PlateCompare){ note("pressmsg","compare.js did not load. Reload the page.","warn"); return; }
+  if(!window.CopyCheck){ note("pressmsg","copycheck.js did not load. Reload the page.","warn"); return; }
+  if(typeof Tesseract === "undefined"){
+    note("pressmsg","The text reader did not load. Check the network and reload.","warn"); return;
+  }
 
   busy = true;
   note("pressmsg","");
   $("prog").classList.add("on");
-  $("progTxt").textContent = "Comparing copy — this takes a few seconds";
-  $("progFill").style.width = "40%";
+  $("progTxt").textContent = "Reading the proof artwork";
+  $("progFill").style.width = "0%";
   hideSlab();
+  $("findings").hidden = true;
 
-  setTimeout(function(){
-    try {
-      result = window.PlateCompare.compare(
-        { img:pane.proof.img, rect:pane.proof.rect, scale:paneScale("proof") },
-        { img:pane.press.img, rect:pane.press.rect, scale:paneScale("press") },
-        {});
-      $("progFill").style.width = "100%";
+  var proofData = null;
+  ocr(prepBox("proof"), "Reading the proof artwork", 0, 50)
+    .then(function(res){
+      proofData = res.data;
+      return ocr(prepBox("press"), "Reading the press sample", 50, 100);
+    })
+    .then(function(res){
+      result = window.CopyCheck.compare(proofData, res.data);
       decide();
-    } catch(err){
-      note("pressmsg","The comparison failed: " + err.message,"warn");
-    }
-    busy = false;
-    $("prog").classList.remove("on");
-  }, 40);
+    })
+    .catch(function(err){
+      note("pressmsg","The comparison failed: " + (err.message||"reader error"),"warn");
+    })
+    .then(function(){
+      busy = false;
+      $("prog").classList.remove("on");
+    });
 });
 
 function decide(){
   var r = result;
-  var copyN = r.regions.length;
+  var n = r.findings.length;
   var verdict, headline, detail;
 
-  if(r.aspectSkew > 0.18){
-    verdict="hold"; headline="Boxes don't match";
-    detail = "The two boxes are very different shapes, so the crops are not comparable. "+
-             "Redraw them to the same edges of the label on each photo.";
-  } else if(r.registration < 0.80){
-    verdict="hold"; headline="Compare inconclusive";
-    detail = "The proof artwork and the press sample could not be aligned well enough to compare. "+
-             "Retake both square-on, flat, and filling the frame.";
-  } else if(copyN > 0){
-    verdict="stop"; headline="Stop — copy differs";
-    detail = copyN + (copyN===1 ? " area of copy differs" : " areas of copy differ") +
-             " between the press sample and the proof for item " + current.item +
-             ". See the boxed regions below before running more material.";
+  if(r.unreadable){
+    verdict="hold"; headline="Could not read";
+    detail = "Too little text could be read with confidence (" + r.proofWords +
+             " words on the proof, " + r.pressWords + " on the press sample). "+
+             "Retake both closer and flatter, with glare off the copy, then validate again.";
+  } else if(n === 0){
+    verdict="go"; headline="Copy matches";
+    detail = "All " + r.matched + " words read on the proof for item " + current.item +
+             " also appear on the press sample." +
+             (r.dropped ? " " + r.dropped + " low-confidence words were skipped." : "");
   } else {
-    verdict="go"; headline="Match";
-    detail = "Item " + current.item + " is confirmed on the proof and the copy on the press "+
-             "sample matches the proof artwork.";
+    verdict="stop"; headline="Stop — copy differs";
+    detail = n + (n===1 ? " copy difference" : " copy differences") +
+             " between the press sample and the proof for item " + current.item + "." +
+             (r.numericFindings ? " " + r.numericFindings + " involve numbers." : "") +
+             " Review below before running more material.";
   }
 
   var s = $("slab");
@@ -683,17 +827,34 @@ function decide(){
   $("call").textContent = headline;
   $("sub").textContent = detail;
   $("cItem").textContent = current.item;
-  $("cProof").textContent = proofOnFile.length ? proofOnFile.map(fmtItem).join("  ") : "—";
-  $("cDiff").textContent = String(copyN);
+  $("cProof").textContent = proofOnFile.length ? proofOnFile.map(fmtItem).join("  ") : "\u2014";
+  $("cDiff").textContent = r.unreadable ? "\u2014" : String(n);
   $("validate").classList.remove("hot");
 
   showFindings(r);
-  record(verdict, copyN);
+  fillReport(verdict, r);
+  record(verdict, r.unreadable ? "" : n);
   s.scrollIntoView({behavior:"smooth", block:"center"});
 }
 
+var KIND = { changed:"Changed", missing:"Missing on press", extra:"Extra on press" };
+
 function showFindings(r){
-  window.PlateCompare.render($("out"), r);
+  var tbl = $("cdiff");
+  if(r.findings.length){
+    var html = "<thead><tr><th>What</th><th>Proof says</th><th>Press says</th></tr></thead><tbody>";
+    r.findings.forEach(function(f){
+      html += "<tr><td class='k'>" + esc(KIND[f.kind]||f.kind) + "</td>" +
+              "<td class='p'>" + (f.proof ? esc(f.proof) : "\u2014") + "</td>" +
+              "<td class='s'>" + (f.press ? esc(f.press) : "\u2014") + "</td></tr>";
+    });
+    tbl.innerHTML = html + "</tbody>";
+    tbl.hidden = false;
+  } else {
+    tbl.innerHTML = "";
+    tbl.hidden = true;
+  }
+
   var host = $("flist");
   host.innerHTML = "";
   function add(k,v){
@@ -701,19 +862,18 @@ function showFindings(r){
     li.innerHTML = "<b>"+esc(k)+"</b><span>"+esc(v)+"</span>";
     host.appendChild(li);
   }
-  add("Copy", r.regions.length
-    ? r.regions.length + (r.regions.length===1 ? " difference region" : " difference regions") +
-      " — boxed in red above."
-    : "No copy differences found above the noise floor.");
-  add("Alignment", "Fit " + r.registration.toFixed(2) +
-      ", rotation " + r.rotation + "\u00B0, offset " + r.fit.dx + "/" + r.fit.dy + " px." +
-      (r.registration < 0.80 ? " Weak — treat the result as unreliable." : ""));
-  add("Crop match", r.aspectSkew < 0.08
-    ? "Both boxes are the same shape."
-    : "Boxes differ in shape by " + Math.round(r.aspectSkew*100) + "%." +
-      (r.aspectSkew > 0.18 ? " Too far apart to compare reliably." : ""));
+  add("Words read", r.proofWords + " on the proof, " + r.pressWords + " on the press sample.");
+  add("Matched", r.matched + " word" + (r.matched===1?"":"s") + " agree.");
+  add("Skipped", r.dropped
+    ? r.dropped + " word" + (r.dropped===1?"":"s") + " were too unclear to read and were not "+
+      "compared. These are blind spots \u2014 check that type by eye."
+    : "None. Every word read met the confidence floor.");
+
+  $("rawProof").textContent = r.proofText || "(nothing read)";
+  $("rawPress").textContent = r.pressText || "(nothing read)";
   $("findings").hidden = false;
 }
+
 function hideSlab(){ $("slab").className = "slab"; }
 
 $("next").addEventListener("click", function(){
@@ -724,73 +884,66 @@ $("next").addEventListener("click", function(){
   $("s1").scrollIntoView({behavior:"smooth", block:"start"});
 });
 
-/* ================= LOG ================= */
-var KEY = "gll.platecheck.log.v1";
-function readLog(){ try { return JSON.parse(store.get(KEY) || "[]"); } catch(e){ return []; } }
-function record(verdict, copyN){
+/* ================= PRINTABLE RECORD ================= */
+var VERDICT_LABEL = { go:"MATCH", stop:"STOP", hold:"REVIEW" };
+
+function fillReport(verdict, r){
+  var now = new Date();
+  $("rVerdict").textContent = VERDICT_LABEL[verdict] || "—";
+  $("rJob").textContent  = current.job;
+  $("rItem").textContent = current.item;
+  $("rCust").textContent = current.customer || "—";
+  $("rWhen").textContent = now.toLocaleDateString() + "  " +
+                           now.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+  $("rOnProof").textContent = proofOnFile.length ? proofOnFile.map(fmtItem).join(", ") : "not read";
+  $("rDetail").textContent = $("sub").textContent;
+
+  var host = $("rDiffs");
+  if(r.findings.length){
+    var html = "<table class='rpt-diff'><thead><tr><th>What</th><th>Proof says</th>" +
+               "<th>Press says</th></tr></thead><tbody>";
+    r.findings.forEach(function(f){
+      html += "<tr><td class='k'>" + esc(KIND[f.kind]||f.kind) + "</td>" +
+              "<td>" + (f.proof ? esc(f.proof) : "—") + "</td>" +
+              "<td class='s'>" + (f.press ? esc(f.press) : "—") + "</td></tr>";
+    });
+    host.innerHTML = html + "</tbody></table>";
+  } else {
+    host.innerHTML = "<p class='rpt-clean'>" +
+      (r.unreadable
+        ? "Not compared — too little text could be read with confidence."
+        : "None. Every word read on the proof also appears on the press sample.") +
+      "</p>";
+  }
+
+  $("rWP").textContent = r.proofWords;
+  $("rWS").textContent = r.pressWords;
+  $("rWM").textContent = r.matched;
+  $("rWD").textContent = r.dropped;
+  $("rTP").textContent = r.proofText || "(nothing read)";
+  $("rTS").textContent = r.pressText || "(nothing read)";
+}
+
+$("print").addEventListener("click", function(){ window.print(); });
+
+/* Keep the off-device record flowing if a sync mode is configured. */
+function record(verdict, diffs){
   var row = {
     t: new Date().toISOString(),
     job: current.job,
     item: current.item,
     cust: current.customer || "",
     proof: proofOnFile.map(fmtItem).join(" "),
-    diffs: copyN,
+    diffs: diffs,
     v: verdict
   };
-  var rows = readLog();
-  rows.unshift(row);
-  store.set(KEY, JSON.stringify(rows.slice(0,500)));
-  renderLog();
   if(window.PlateSync){ try { window.PlateSync.send(row); } catch(e){} }
 }
-function renderLog(){
-  var rows = readLog(), host = $("logBody");
-  if(!rows.length){ host.innerHTML = '<p class="empty">No checks recorded yet.</p>'; return; }
-  var html = '<table><thead><tr><th>Time</th><th>Job #</th><th>Item #</th>'+
-             '<th>Diffs</th><th>Result</th></tr></thead><tbody>';
-  rows.slice(0,25).forEach(function(r){
-    var d = new Date(r.t);
-    var when = d.toLocaleDateString([], {month:"numeric",day:"numeric"}) + " " +
-               d.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
-    var lbl = r.v==="go" ? "MATCH" : (r.v==="stop" ? "STOP" : "REVIEW");
-    html += "<tr><td>"+esc(when)+"</td><td class='c'>"+esc(r.job)+
-            "</td><td class='c'>"+esc(r.item||"")+
-            "</td><td class='c'>"+esc(String(r.diffs==null?"":r.diffs))+
-            "</td><td><span class='tag "+r.v+"'>"+lbl+"</span></td></tr>";
-  });
-  host.innerHTML = html + "</tbody></table>";
-  if(rows.length > 25){
-    host.innerHTML += '<p class="empty" style="margin-top:10px">Showing 25 most recent of '+
-                      rows.length+'. Export to CSV for the full log.</p>';
-  }
-}
-$("csv").addEventListener("click", function(){
-  var rows = readLog();
-  if(!rows.length) return;
-  var out = "timestamp,job,item,customer,items_on_proof,copy_diff_regions,result\n";
-  rows.forEach(function(r){
-    out += [r.t,r.job,r.item||"",r.cust,r.proof||"",r.diffs==null?"":r.diffs,r.v]
-      .map(function(v){ return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'; })
-      .join(",") + "\n";
-  });
-  var a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([out],{type:"text/csv"}));
-  a.download = "plate-check-" + new Date().toISOString().slice(0,10) + ".csv";
-  a.click();
-  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
-});
 
-document.addEventListener("platesync", function(e){
-  var el = $("qbadge");
-  if(!el) return;
-  el.textContent = e.detail.queued ? (e.detail.queued + " waiting to sync") : "";
-  el.hidden = !e.detail.queued;
-});
 
 /* ================= INIT ================= */
 initPane("proof","cvProof");
 initPane("press","cvPress");
-renderLog();
 
 /* ---------------- self-check ---------------- */
 (function(){
@@ -827,9 +980,9 @@ renderLog();
         ? "Text reader present."
         : "Text reader did not load from the CDN. Check the network or content blockers, then reload.");
 
-  row(window.PlateCompare ? "ok" : "bad",
-      window.PlateCompare ? "Comparison engine present."
-                          : "compare.js did not load — confirm it sits next to index.html.");
+  row(window.CopyCheck ? "ok" : "bad",
+      window.CopyCheck ? "Copy-check engine present."
+                       : "copycheck.js did not load — confirm it sits next to index.html.");
 
   var fi = document.createElement("input");
   fi.type = "file";
