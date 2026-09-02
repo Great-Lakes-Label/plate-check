@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plate Check — Great Lakes Label</title>
+<meta name="theme-color" content="#05294A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --console:#05294A;
+    --gll:#005395;
+    --gold:#E0A22E;
+    --go:#0B7A3B;
+    --stop:#C41E1E;
+    --hold:#B77605;
+    --ink:#14202C;
+    --slate:#5F6E7C;
+    --steel:#C9D2DA;
+    --card:#F1F4F7;
+    --paper:#FFFFFF;
+    --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --disp:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:var(--sans);color:var(--ink);background:var(--card);
+    -webkit-text-size-adjust:100%;padding-bottom:env(safe-area-inset-bottom);
+  }
+  .wrap{max-width:560px;margin:0 auto;background:var(--paper);min-height:100vh}
+
+  .top{
+    background:var(--console);color:#fff;padding:14px 18px;
+    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  }
+  .top h1{
+    font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:.06em;
+    text-transform:uppercase;margin:0;line-height:1;
+  }
+  .top .org{
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;opacity:.72;white-space:nowrap;
+  }
+
+  .step{padding:20px 18px;border-bottom:1px solid var(--steel)}
+  .step.locked{opacity:.45;pointer-events:none}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--gll);margin:0 0 12px;
+  }
+  .eyebrow b{color:var(--slate);font-weight:500}
+
+  .lead{
+    font-family:var(--disp);font-weight:600;font-size:22px;line-height:1.12;
+    letter-spacing:.01em;margin:0 0 14px;color:var(--ink);
+  }
+  label.fld{display:block;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--slate);margin:0 0 6px}
+  .row{display:flex;gap:10px}
+  input[type=text]{
+    display:block;width:100%;font-family:var(--mono);font-size:22px;font-weight:500;
+    padding:14px 12px;border:2px solid var(--steel);border-radius:6px;background:#fff;color:var(--ink);
+  }
+  input[type=text]:focus{outline:3px solid var(--gll);outline-offset:1px;border-color:var(--gll)}
+
+  button{font-family:inherit;cursor:pointer;border:0;border-radius:6px}
+  button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .btn-submit{
+    background:var(--gll);color:#fff;font-weight:600;font-size:16px;
+    padding:15px 26px;letter-spacing:.02em;
+  }
+  .btn-submit.wide{display:block;width:100%;margin-top:18px}
+  .sub-help{font-size:12px;color:var(--slate);margin:6px 0 0;line-height:1.4}
+  .btn-submit:disabled{background:var(--steel);cursor:default}
+
+  /* the action the operator should take right now */
+  .btn-act{
+    display:block;width:100%;background:var(--console);color:#fff;
+    font-family:var(--disp);font-weight:700;font-size:25px;letter-spacing:.06em;
+    text-transform:uppercase;padding:24px 16px;
+  }
+  .btn-act.hot{
+    background:var(--gold);color:#2B1D00;
+    box-shadow:0 0 0 4px rgba(224,162,46,.28);
+  }
+  .btn-act:disabled{background:var(--steel);color:#fff;box-shadow:none;cursor:default}
+  .btn-act + .btn-act{margin-top:12px}
+  .btn-min{background:none;border:2px solid var(--steel);color:var(--slate);font-size:13px;font-weight:600;padding:9px 14px}
+
+  .target{margin-top:14px;background:var(--card);border-left:4px solid var(--gll);padding:12px 14px}
+  .target dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline}
+  .target dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
+  .target dd{margin:0;font-family:var(--mono);font-size:17px;font-weight:700}
+  .target .desc{font-family:var(--sans);font-size:15px;font-weight:600}
+
+  .note{font-size:13px;line-height:1.5;color:var(--slate);margin:12px 0 0}
+  .note.warn{color:var(--stop);font-weight:600}
+
+  .shot{margin-top:16px;display:none;touch-action:none}
+  .shot.on{display:block}
+  .shot canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
+  .shot .hint{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);margin:8px 0 0;line-height:1.5}
+  .shot .tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .picks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .pick{
+    display:flex;align-items:center;gap:8px;text-align:left;
+    background:#fff;border:2px solid var(--steel);color:var(--slate);
+    font-size:13px;font-weight:600;padding:11px 10px;line-height:1.25;
+  }
+  .pick.armed{border-color:var(--gold);background:#FFFBF2;color:var(--ink)}
+  .pick.done{border-color:var(--go);color:var(--ink)}
+  .pick em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--go);margin-left:auto}
+  .sw{width:12px;height:12px;border-radius:2px;flex:0 0 auto}
+  .sw-p{background:var(--gll)} .sw-s{background:var(--gold)}
+
+  .findings{padding:0 18px 24px}
+  .findings canvas{display:block;width:100%;border:2px solid var(--steel);border-radius:6px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 0;font-size:12px;color:var(--slate)}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-2px}
+  .legend .k-copy{border:2px solid var(--stop)}
+  .legend .k-col{background:rgba(224,162,46,.55)}
+  .flist{margin:14px 0 0;padding:0;list-style:none}
+  .flist li{font-size:13px;line-height:1.5;padding:8px 0;border-bottom:1px solid var(--card);display:flex;gap:10px}
+  .flist li b{font-family:var(--mono);font-size:12px;color:var(--gll);flex:0 0 62px}
+  .disclaim{font-size:12px;line-height:1.5;color:var(--slate);margin:16px 0 0;
+            border-left:3px solid var(--steel);padding-left:10px}
+
+  .slab{display:none;color:#fff}
+  .slab.on{display:block}
+  .slab .bar{height:10px}
+  .slab .body{padding:22px 18px 24px}
+  .slab .call{font-family:var(--disp);font-weight:700;font-size:46px;line-height:.92;letter-spacing:.03em;text-transform:uppercase;margin:0 0 4px}
+  .slab .sub{font-size:14px;line-height:1.45;margin:0;opacity:.94}
+  .cmp{margin:18px 0 0;border-top:1px solid rgba(255,255,255,.28)}
+  .cmp div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.28)}
+  .cmp dt{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8;margin:0}
+  .cmp dd{font-family:var(--mono);font-size:26px;font-weight:700;margin:0;text-align:right;word-break:break-all}
+  .slab.is-go{background:var(--go)}   .slab.is-go .bar{background:#064d25}
+  .slab.is-stop{background:var(--stop)}
+  .slab.is-stop .bar{background:repeating-linear-gradient(45deg,#1a1a1a 0 14px,#F2C200 14px 28px)}
+  .slab.is-hold{background:var(--hold)} .slab.is-hold .bar{background:#7d5104}
+  .slab .again{margin:18px 0 0}
+
+  .prog{display:none;padding:18px;background:var(--card);border-bottom:1px solid var(--steel)}
+  .prog.on{display:block}
+  .prog p{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin:0 0 8px}
+  .prog .track{height:6px;background:var(--steel);border-radius:3px;overflow:hidden}
+  .prog .fill{height:100%;width:0;background:var(--gll);transition:width .25s ease}
+
+  .log{padding:20px 18px 34px}
+  .log table{width:100%;border-collapse:collapse}
+  .log th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);text-align:left;font-weight:700;padding:0 8px 8px 0;border-bottom:2px solid var(--steel)}
+  .log td{font-size:13px;padding:9px 8px 9px 0;border-bottom:1px solid var(--card);vertical-align:top}
+  .log td.c{font-family:var(--mono);font-size:13px;font-weight:700}
+  .log .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 6px;border-radius:3px;color:#fff;white-space:nowrap}
+  .tag.go{background:var(--go)} .tag.stop{background:var(--stop)} .tag.hold{background:var(--hold)}
+  .log .empty{font-size:13px;color:var(--slate);margin:0;line-height:1.5}
+  .log .foot{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
+  #errbar{
+    background:var(--stop);color:#fff;padding:12px 18px;font-family:var(--mono);
+    font-size:12px;line-height:1.5;word-break:break-word;
+  }
+  #diag{border-bottom:1px solid var(--steel);font-size:13px}
+  #diag summary{
+    padding:10px 18px;cursor:pointer;font-family:var(--mono);font-size:11px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--slate);
+  }
+  #diag[data-bad="1"] summary{color:var(--stop);font-weight:700}
+  #diag ul{margin:0;padding:0 18px 14px;list-style:none}
+  #diag li{padding:5px 0;border-bottom:1px solid var(--card);display:flex;gap:8px;line-height:1.4}
+  #diag li span:first-child{flex:0 0 18px;font-weight:700}
+  #diag li.ok span:first-child{color:var(--go)}
+  #diag li.bad span:first-child{color:var(--stop)}
+  #diag li.warn span:first-child{color:var(--hold)}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>Plate Check</h1>
+    <span class="org">Great Lakes Label</span>
+  </header>
+
+  <div id="errbar" hidden></div>
+
+  <details id="diag">
+    <summary>Self-check</summary>
+    <ul id="diagList"></ul>
+  </details>
+
+  <!-- STEP 1 -->
+  <section class="step" id="s1">
+    <p class="eyebrow">Step 1</p>
+
+    <label class="fld" for="job">Job #</label>
+    <input type="text" id="job" inputmode="numeric" autocomplete="off" placeholder="Enter Job #">
+
+    <label class="fld" for="item" style="margin-top:16px">Item #</label>
+    <input type="text" id="item" inputmode="numeric" autocomplete="off"
+           placeholder="Enter Item #" aria-describedby="itemhelp">
+    <p class="sub-help" id="itemhelp">As shown on the Art Proof Approval</p>
+
+    <button class="btn-submit wide" id="submit">Submit</button>
+
+    <div id="target" class="target" hidden>
+      <dl>
+        <dt>Artwork code</dt><dd id="tCode">—</dd>
+        <dt>Descriptor</dt><dd class="desc" id="tDesc">—</dd>
+        <dt>Customer</dt><dd class="desc" id="tCust">—</dd>
+      </dl>
+    </div>
+    <p class="note" id="jobmsg"></p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step locked" id="s2">
+    <p class="eyebrow">Step 2</p>
+    <p class="lead">Line up press sample next to Art Proof Approval</p>
+    <button class="btn-act" id="shoot" disabled>Photograph label</button>
+    <input type="file" id="file" accept="image/*" capture="environment" class="sr">
+
+    <div class="shot" id="shot">
+      <canvas id="cv"></canvas>
+      <p class="hint" id="cropHint">Box the artwork on the proof, then box the label off the press.</p>
+      <div class="picks">
+        <button class="pick" id="pickProof" data-mode="proof">
+          <span class="sw sw-p"></span>1 &middot; Proof artwork <em id="okProof"></em>
+        </button>
+        <button class="pick" id="pickPress" data-mode="press">
+          <span class="sw sw-s"></span>2 &middot; Press sample <em id="okPress"></em>
+        </button>
+      </div>
+      <div class="tools">
+        <button class="btn-min" id="clearsel">Clear boxes</button>
+        <button class="btn-min" id="retake">Retake photo</button>
+      </div>
+      <button class="btn-act" id="validate">Validate for accuracy</button>
+    </div>
+
+    <div class="findings" id="findings" hidden>
+      <p class="eyebrow" style="margin-top:22px">Differences found</p>
+      <canvas id="out"></canvas>
+      <div class="legend">
+        <span><i class="k-copy"></i>Copy difference</span>
+        <span><i class="k-col"></i>Colour deviation (relative)</span>
+      </div>
+      <ul class="flist" id="flist"></ul>
+      <p class="disclaim">Colour here is a relative comparison between the two items in this one
+      photo. The Art Proof Approval is not a colour standard and this is not a delta-E measurement.
+      Confirm colour with a spectrophotometer against the job standard.</p>
+    </div>
+
+    <p class="note" id="shotmsg"></p>
+  </section>
+
+  <!-- PROGRESS -->
+  <div class="prog" id="prog" aria-live="polite">
+    <p id="progTxt">Reading label</p>
+    <div class="track"><div class="fill" id="progFill"></div></div>
+  </div>
+
+  <!-- VERDICT -->
+  <section class="slab" id="slab" aria-live="assertive">
+    <div class="bar"></div>
+    <div class="body">
+      <p class="call" id="call"></p>
+      <p class="sub" id="sub"></p>
+      <dl class="cmp">
+        <div><dt>Item # entered</dt><dd id="cItem">—</dd></div>
+        <div><dt>On proof sheet</dt><dd id="cExp">—</dd></div>
+        <div><dt>Artwork codes</dt><dd id="cGot">—</dd></div>
+      </dl>
+      <div class="again"><button class="btn-min" id="next" style="border-color:rgba(255,255,255,.6);color:#fff">Start next check</button></div>
+    </div>
+  </section>
+
+  <!-- LOG -->
+  <section class="log">
+    <p class="eyebrow">Check log <b id="qbadge" hidden style="text-transform:none;letter-spacing:0;font-weight:600"></b></p>
+    <div id="logBody"><p class="empty">No checks recorded yet.</p></div>
+    <div class="foot">
+      <button class="btn-min" id="csv">Export to CSV</button>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<!-- Uncomment only for MODE "graph" in sync.js -->
+<!-- <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script> -->
+<script src="compare.js"></script>
+<script src="sync.js"></script>
+<script>
+/* ---- surface errors on screen: the iPad has no console ---- */
+(function(){
+  function show(msg){
+    var b = document.getElementById("errbar");
+    if(!b) return;
+    b.hidden = false;
+    b.textContent = (b.textContent ? b.textContent + "\n\n" : "") + msg;
+  }
+  window.addEventListener("error", function(e){
+    if(e.target && e.target.tagName === "SCRIPT"){
+      show("Could not load script: " + (e.target.src || "?") +
+           "  \u2014 check the shop network or firewall.");
+      return;
+    }
+    show("Error: " + (e.message || "unknown") +
+         (e.filename ? "  (" + String(e.filename).split("/").pop() + ":" + e.lineno + ")" : ""));
+  }, true);
+  window.addEventListener("unhandledrejection", function(e){
+    show("Error: " + ((e.reason && (e.reason.message || e.reason)) || "request failed"));
+  });
+  window.__diagShow = show;
+})();
+</script>
+<script>
+(function(){
+"use strict";
+
+var DEFAULT_CODE_LEN = 6;
+
+/* ---- explicit Tesseract asset paths ----
+   iOS Safari will not always resolve the worker and wasm files implicitly
+   from the CDN bundle, which leaves recognition silently dead. Naming them
+   makes loading deterministic on iPad. */
+var TESS = {
+  workerPath: "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js",
+  corePath:   "https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.0",
+  langPath:   "https://tessdata.projectnaptha.com/4.0.0"
+};   // GLL artwork codes; used when a job is not in the table
+
+var mem = {};
+var store = {
+  get: function(k){ try { return localStorage.getItem(k); } catch(e){ return mem[k] || null; } },
+  set: function(k,v){ try { localStorage.setItem(k,v); } catch(e){ mem[k]=v; } }
+};
+var $ = function(id){ return document.getElementById(id); };
+
+var items = {}, descriptors = [];
+var current = null, img = null;
+var rects = { proof:null, press:null };
+var mode = "proof";
+var lastCompare = null;
+
+function digitsOnly(s){ return (s||"").replace(/\D/g,""); }
+function normText(s){ return (s||"").toUpperCase().replace(/[^A-Z0-9 ]/g," ").replace(/\s+/g," ").trim(); }
+function digitize(s){
+  return (s||"").replace(/[OQ]/gi,"0").replace(/[IL|]/g,"1")
+                .replace(/S/gi,"5").replace(/B/g,"8").replace(/[Zz]/g,"2");
+}
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+  });
+}
+function note(id,msg,bad){
+  var el = $(id); el.textContent = msg || ""; el.className = bad ? "note warn" : "note";
+}
+
+/* ---------- job table ---------- */
+fetch("items.json",{cache:"no-store"})
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(function(rows){
+    rows.forEach(function(r){
+      var k = digitsOnly(r.item);
+      if(k) items[k] = r;
+      if(r.descriptor) descriptors.push(r.descriptor);
+    });
+    note("jobmsg","",false);
+  })
+  .catch(function(){
+    note("jobmsg","",false);   /* table is optional metadata; absence is not an error */
+  });
+
+/* ---------- STEP 1 ---------- */
+function submitJob(){
+  var job  = $("job").value.trim();
+  var item = $("item").value.trim();
+  var ik   = digitsOnly(item);
+
+  if(!job){ note("jobmsg","Enter the Job #.",true); $("job").focus(); return; }
+  if(!ik){ note("jobmsg","Enter the Item # from the Art Proof Approval.",true); $("item").focus(); return; }
+
+  note("jobmsg","",false);
+  var rec = items[ik];
+  if(!rec){
+    rec = { item:item, code:"", descriptor:"", customer:"" };
+  }
+
+  current = {
+    job: job,
+    item: rec.item || item,
+    itemDigits: ik,
+    code: rec.code || "",
+    descriptor: rec.descriptor || "",
+    customer: rec.customer || ""
+  };
+
+  $("tCode").textContent = current.code || "\u2014";
+  $("tDesc").textContent = current.descriptor || "—";
+  $("tCust").textContent = current.customer || "—";
+  $("target").hidden = false;
+
+  $("s2").classList.remove("locked");
+  $("shoot").disabled = false;
+  $("shoot").classList.add("hot");
+  hideSlab();
+  $("s2").scrollIntoView({behavior:"smooth", block:"start"});
+}
+$("submit").addEventListener("click", submitJob);
+$("job").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); $("item").focus(); }});
+$("item").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); submitJob(); }});
+$("job").addEventListener("input", resetDownstream);
+$("item").addEventListener("input", resetDownstream);
+
+function resetDownstream(){
+  current = null;
+  img = null;
+  rects.proof = null; rects.press = null;
+  lastCompare = null;
+  mode = "proof";
+  $("target").hidden = true;
+  $("findings").hidden = true;
+  $("s2").classList.add("locked");
+  $("shoot").disabled = true;
+  $("shoot").classList.remove("hot");
+  $("validate").classList.remove("hot");
+  $("shot").classList.remove("on");
+  note("shotmsg","",false);
+  hideSlab();
+}
+
+/* ---------- STEP 2: capture ---------- */
+$("shoot").addEventListener("click", function(){ $("file").click(); });
+$("retake").addEventListener("click", function(){ $("file").click(); });
+
+$("file").addEventListener("change", function(e){
+  var f = e.target.files && e.target.files[0];
+  if(!f) return;
+  var url = URL.createObjectURL(f);
+  var im = new Image();
+  im.onload = function(){
+    img = im; rects.proof = null; rects.press = null; lastCompare = null;
+    $("findings").hidden = true;
+    setMode("proof"); syncPicks();
+    drawCanvas();
+    $("shot").classList.add("on");
+    $("shoot").classList.remove("hot");
+    $("validate").classList.add("hot");
+    note("shotmsg","",false);
+    hideSlab();
+    $("validate").scrollIntoView({behavior:"smooth", block:"center"});
+    URL.revokeObjectURL(url);
+  };
+  im.onerror = function(){ note("shotmsg","That image could not be opened. Take the photo again.",true); };
+  im.src = url;
+  e.target.value = "";
+});
+
+/* ---------- canvas + region boxes ---------- */
+var cv = $("cv"), ctx = cv.getContext("2d");
+function drawCanvas(){
+  if(!img) return;
+  var w = Math.min(img.naturalWidth, 1200);
+  var s = w / img.naturalWidth;
+  cv.width = w; cv.height = Math.round(img.naturalHeight * s);
+  ctx.drawImage(img,0,0,cv.width,cv.height);
+  box(rects.proof, "#005395", "PROOF");
+  box(rects.press, "#E0A22E", "PRESS");
+}
+function box(r, colour, tag){
+  if(!r) return;
+  var lw = Math.max(3, cv.width/280);
+  ctx.save();
+  ctx.strokeStyle = colour; ctx.lineWidth = lw;
+  ctx.strokeRect(r.x, r.y, r.w, r.h);
+  ctx.fillStyle = colour;
+  var fs = Math.max(14, cv.width/44);
+  ctx.font = "700 " + fs + "px system-ui, sans-serif";
+  var tw = ctx.measureText(tag).width;
+  ctx.fillRect(r.x, Math.max(0, r.y-fs*1.45), tw+fs*0.6, fs*1.4);
+  ctx.fillStyle = "#fff";
+  ctx.fillText(tag, r.x+fs*0.3, Math.max(fs, r.y-fs*0.35));
+  ctx.restore();
+}
+function toPt(ev){
+  var r = cv.getBoundingClientRect();
+  return { x:(ev.clientX-r.left)*(cv.width/r.width), y:(ev.clientY-r.top)*(cv.height/r.height) };
+}
+var dragStart = null;
+cv.addEventListener("pointerdown", function(ev){
+  if(!img) return;
+  cv.setPointerCapture(ev.pointerId);
+  dragStart = toPt(ev);
+  rects[mode] = null;
+  drawCanvas();
+});
+cv.addEventListener("pointermove", function(ev){
+  if(!dragStart) return;
+  var p = toPt(ev);
+  rects[mode] = { x:Math.min(dragStart.x,p.x), y:Math.min(dragStart.y,p.y),
+                  w:Math.abs(p.x-dragStart.x), h:Math.abs(p.y-dragStart.y) };
+  drawCanvas();
+});
+cv.addEventListener("pointerup", function(){
+  dragStart = null;
+  var r = rects[mode];
+  if(r && (r.w < 40 || r.h < 40)){ rects[mode] = null; }
+  drawCanvas();
+  syncPicks();
+  // after boxing the proof, arm the press selector automatically
+  if(mode === "proof" && rects.proof && !rects.press) setMode("press");
+});
+
+function setMode(m){
+  mode = m;
+  $("pickProof").classList.toggle("armed", m === "proof");
+  $("pickPress").classList.toggle("armed", m === "press");
+  $("cropHint").textContent = (m === "proof")
+    ? "Drag a box around the artwork on the Art Proof Approval."
+    : "Now drag a box around the label off the press.";
+}
+function syncPicks(){
+  $("pickProof").classList.toggle("done", !!rects.proof);
+  $("pickPress").classList.toggle("done", !!rects.press);
+  $("okProof").textContent = rects.proof ? "\u2713" : "";
+  $("okPress").textContent = rects.press ? "\u2713" : "";
+  if(rects.proof && rects.press){
+    $("cropHint").textContent = "Both regions set. Validate for accuracy.";
+    $("validate").classList.add("hot");
+  }
+}
+$("pickProof").addEventListener("click", function(){ setMode("proof"); });
+$("pickPress").addEventListener("click", function(){ setMode("press"); });
+$("clearsel").addEventListener("click", function(){
+  rects.proof = null; rects.press = null;
+  $("findings").hidden = true;
+  setMode("proof"); syncPicks(); drawCanvas();
+});
+
+/* ---------- prep pixels ---------- */
+function prep(region){
+  var sx,sy,sw,sh;
+  if(region){
+    var k = img.naturalWidth / cv.width;
+    sx=region.x*k; sy=region.y*k; sw=region.w*k; sh=region.h*k;
+  } else { sx=0; sy=0; sw=img.naturalWidth; sh=img.naturalHeight; }
+
+  var target = region ? 1400 : 2000;
+  var scale = Math.min(4, Math.max(1, target / sw));
+  var c = document.createElement("canvas");
+  c.width = Math.round(sw*scale); c.height = Math.round(sh*scale);
+  var x = c.getContext("2d");
+  x.imageSmoothingQuality = "high";
+  x.drawImage(img, sx,sy,sw,sh, 0,0,c.width,c.height);
+
+  var d = x.getImageData(0,0,c.width,c.height), p = d.data, i, g, lo=255, hi=0;
+  for(i=0;i<p.length;i+=4){
+    g = (p[i]*0.299 + p[i+1]*0.587 + p[i+2]*0.114)|0;
+    p[i]=p[i+1]=p[i+2]=g;
+    if(g<lo) lo=g; if(g>hi) hi=g;
+  }
+  var span = Math.max(1, hi-lo);
+  for(i=0;i<p.length;i+=4){
+    g = ((p[i]-lo)*255/span)|0;
+    p[i]=p[i+1]=p[i+2] = g<0?0:(g>255?255:g);
+  }
+  x.putImageData(d,0,0);
+  return c;
+}
+
+/* ---------- validate ---------- */
+var busy = false;
+$("validate").addEventListener("click", function(){
+  if(!current || !img){ note("shotmsg","Take a photo first.",true); return; }
+  if(busy) return;
+  if(typeof Tesseract === "undefined"){
+    note("shotmsg","The text-reading engine did not load. Check the shop network and reload this page.",true);
+    return;
+  }
+  busy = true;
+  $("prog").classList.add("on");
+  $("progTxt").textContent = "Reading item numbers";
+  $("progFill").style.width = "0%";
+  hideSlab();
+  $("findings").hidden = true;
+
+  Tesseract.recognize(prep(null), "eng", {
+    workerPath: TESS.workerPath, corePath: TESS.corePath, langPath: TESS.langPath,
+    logger: function(m){
+      if(m.status === "recognizing text") $("progFill").style.width = Math.round(m.progress*70)+"%";
+    }
+  }).then(function(res){
+    // visual comparison, only when both regions are boxed
+    if(rects.proof && rects.press && window.PlateCompare){
+      $("progTxt").textContent = "Comparing press sample to proof";
+      $("progFill").style.width = "78%";
+      return new Promise(function(done){
+        setTimeout(function(){
+          try {
+            lastCompare = window.PlateCompare.compare(
+              img, rects.proof, rects.press, img.naturalWidth/cv.width, {});
+          } catch(e){ lastCompare = null; }
+          $("progFill").style.width = "100%";
+          done(res);
+        }, 30);
+      });
+    }
+    lastCompare = null;
+    return res;
+  }).then(function(res){
+    decide(res.data.text || "");
+    if(lastCompare) showFindings(lastCompare);
+  }).catch(function(){
+    note("shotmsg","The photo could not be processed. Retake it with both items square-on and evenly lit.",true);
+  }).then(function(){
+    busy = false; $("prog").classList.remove("on");
+  });
+});
+
+/* ---------- findings panel ---------- */
+function showFindings(r){
+  var host = $("flist");
+  host.innerHTML = "";
+  window.PlateCompare.render($("out"), r, true);
+
+  var copyN = r.regions.length;
+  var colHi = r.colour.filter(function(b){ return b.d >= 12; }).length;
+
+  add("Copy", copyN
+    ? copyN + (copyN === 1 ? " difference region" : " difference regions") +
+      " \u2014 boxed in red on the image above."
+    : "No copy differences found above the noise floor.");
+
+  add("Colour", r.colourWorst < 12
+    ? "No colour deviation above the noise floor (largest " + r.colourWorst.toFixed(1) +
+      " Lab units; anything under about 6 is normal frame-to-frame variation)."
+    : "Largest relative deviation " + r.colourWorst.toFixed(1) + " Lab units across " + colHi +
+      " sampled block" + (colHi===1?"":"s") + ". Shaded amber above.");
+
+  add("Fit", r.registration < 0.25
+    ? "Alignment was weak (" + r.registration.toFixed(2) + "). Results may be unreliable \u2014 retake square-on with both items flat."
+    : "Regions aligned (" + r.registration.toFixed(2) + "), offset " + r.fit.dx + "/" + r.fit.dy + " px.");
+
+  function add(k, v){
+    var li = document.createElement("li");
+    li.innerHTML = "<b>" + k + "</b><span>" + esc(v) + "</span>";
+    host.appendChild(li);
+  }
+  $("findings").hidden = false;
+}
+
+function decide(text){
+  var digitText = digitize(text);
+
+  /* --- item numbers on the proof sheet ---
+     Product numbers run 2 digits + separator + 7 digits (10-9813961). Most
+     sheets carry one approval block; a few carry two. Collect all of them. */
+  var itemRuns = (digitText.match(/\d{2}[-\u2013\u2014.\s]{0,3}\d{7}/g) || [])
+                   .map(function(s){ return s.replace(/\D/g,""); });
+  var onProof = itemRuns.filter(function(v,i){ return itemRuns.indexOf(v)===i; });
+  var itemOK  = onProof.indexOf(current.itemDigits) !== -1;
+
+  /* --- artwork codes in frame --- */
+  var want  = digitsOnly(current.code);
+  var len   = want ? want.length : DEFAULT_CODE_LEN;
+  var runs  = (digitText.match(/\d{4,}/g) || []);
+  var codes = runs.filter(function(r){ return r.length === len; });
+  var uniq  = codes.filter(function(v,i){ return codes.indexOf(v)===i; });
+
+  /* Codes legitimately expected in frame: one per approval block that the
+     item table knows about. A two-block sheet showing two codes is normal. */
+  var allowed = [];
+  onProof.forEach(function(d){
+    var rec = items[d];
+    var c = rec && digitsOnly(rec.code);
+    if(c && allowed.indexOf(c) === -1) allowed.push(c);
+  });
+  var unexpected = allowed.length
+    ? uniq.filter(function(c){ return allowed.indexOf(c) === -1; })
+    : [];
+
+  var verdict, headline, detail;
+  var proofLabel = onProof.length ? onProof.map(fmtItem).join("   ") : "none read";
+  var codeLabel  = uniq.length ? uniq.join("   ") : "none read";
+
+  if(!onProof.length){
+    verdict="hold"; headline="No read";
+    detail="No item number was found on the proof sheet. Retake with the Art Proof Approval flat "+
+           "and glare off the product number, or drag a box around it and validate again.";
+  }
+  else if(!itemOK){
+    verdict="stop"; headline="Stop \u2014 wrong item";
+    detail="You entered "+current.item+", but the proof sheet in frame shows "+
+           onProof.map(fmtItem).join(" and ")+". "+
+           (onProof.length > 1
+             ? "This sheet carries more than one approval block \u2014 confirm which one governs this job."
+             : "Confirm you are holding the right Art Proof Approval for this job.");
+  }
+  else if(unexpected.length){
+    verdict="stop"; headline="Stop \u2014 codes differ";
+    detail="Artwork code "+unexpected.join(" and ")+" is in frame but belongs to no item on this "+
+           "proof sheet. The press sample is not printing the approved artwork. Stop and verify the plates.";
+  }
+  else if(want && uniq.length && uniq.indexOf(want) === -1){
+    verdict="stop"; headline="Stop \u2014 wrong code";
+    detail="Item "+current.item+" is confirmed on the proof, but the artwork code read is "+
+           uniq.join(" and ")+" instead of "+want+". Check whether the plates were changed for this lot.";
+  }
+  else if(!allowed.length && onProof.length === 1 && uniq.length > 1){
+    /* Single-block sheet should show a single artwork code. */
+    verdict="stop"; headline="Stop \u2014 codes differ";
+    detail="Two different artwork codes are in frame ("+uniq.join(" and ")+") but the sheet has one "+
+           "approval block. The press sample and the proof are not the same artwork. Verify the plates.";
+  }
+  else if(!allowed.length && onProof.length > 1 && uniq.length > 1){
+    /* Two blocks, no codes on file: which code belongs to which block cannot
+       be told from the photo, so ask rather than guess. */
+    verdict="hold"; headline="Confirm block";
+    detail="Item "+current.item+" is on the sheet, but this sheet has "+onProof.length+
+           " approval blocks and "+uniq.length+" artwork codes ("+uniq.join(", ")+"). "+
+           "Confirm by eye that the press sample carries the code for "+current.item+
+           ", or add it to the item table for an automatic answer.";
+  }
+  else {
+    var veto = descriptorConflict(text);
+    if(veto){
+      verdict="stop"; headline="Stop \u2014 copy conflict";
+      detail="Item "+current.item+" is confirmed, but the label also reads \u201C"+veto+
+             "\u201D, which belongs to a different item. Do not run. Get a supervisor.";
+    } else {
+      verdict="go"; headline="Match";
+      detail="Item "+current.item+" is confirmed on the proof sheet"+
+             (onProof.length > 1 ? " (one of "+onProof.length+" approval blocks)" : "")+
+             (want && uniq.indexOf(want) !== -1
+                ? ", and the artwork code "+want+" matches."
+                : uniq.length ? "." : ". No artwork code was read \u2014 confirm the code by eye.");
+      if(!uniq.length) verdict = "hold", headline = "Item confirmed";
+    }
+  }
+
+  /* --- fold in the side-by-side visual comparison --- */
+  if(lastCompare){
+    var vc = lastCompare;
+    var weakFit = vc.registration < 0.25;
+    var copyN = vc.regions.length;
+    var colBad = vc.colourWorst >= 12;   /* noise floor sits near 6 */
+
+    if(weakFit){
+      if(verdict === "go"){
+        verdict="hold"; headline="Compare inconclusive";
+        detail += " The two regions could not be aligned well enough to compare copy \u2014 retake "+
+                  "square-on with both items flat, or check by eye.";
+      }
+    } else if(copyN > 0){
+      verdict="stop"; headline="Stop \u2014 copy differs";
+      detail = copyN + (copyN === 1 ? " area of copy differs" : " areas of copy differ") +
+               " between the press sample and the proof. See the boxed regions below. " +
+               (itemOK ? "Item "+current.item+" is confirmed on the proof, so this is a printing or plate issue."
+                       : detail);
+    } else if(colBad && verdict === "go"){
+      verdict="hold"; headline="Check colour";
+      detail = "Copy matches the proof and item "+current.item+" is confirmed, but the ink reads "+
+               vc.colourWorst.toFixed(1)+" Lab units off the proof in this photo. "+
+               "Verify against the job standard with a spectrophotometer.";
+    }
+  }
+
+  paint(verdict, headline, detail, proofLabel, codeLabel);
+  record(verdict, proofLabel, codeLabel);
+}
+
+/* 109813961 -> 10-9813961 for display */
+function fmtItem(d){
+  return (d && d.length === 9) ? d.slice(0,2) + "-" + d.slice(2) : d;
+}
+
+function descriptorConflict(text){
+  var mine = normText(current.descriptor||"");
+  if(!mine) return null;               /* nothing on file to compare against */
+  var t = normText(text), hit = null;
+  descriptors.forEach(function(d){
+    var n = normText(d);
+    if(!n || n === mine) return;
+    if(t.indexOf(n) === -1) return;
+    if(mine && n.indexOf(mine) === -1 && mine.indexOf(n) === -1) return;
+    if(n.length > mine.length && (!hit || n.length > normText(hit).length)) hit = d;
+  });
+  return hit;
+}
+
+function paint(kind, headline, detail, expected, got){
+  var s = $("slab");
+  s.className = "slab on is-" + kind;
+  $("call").textContent = headline;
+  $("sub").textContent = detail;
+  $("cItem").textContent = current.item;
+  $("cExp").textContent = expected;
+  $("cGot").textContent = got;
+  $("validate").classList.remove("hot");
+  s.scrollIntoView({behavior:"smooth", block:"center"});
+}
+function hideSlab(){ $("slab").className = "slab"; }
+
+$("next").addEventListener("click", function(){
+  $("job").value = ""; $("item").value = "";
+  resetDownstream();
+  note("jobmsg","",false);
+  $("job").focus();
+  $("s1").scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+/* ---------- log ---------- */
+var KEY = "gll.platecheck.log.v1";
+function readLog(){ try { return JSON.parse(store.get(KEY) || "[]"); } catch(e){ return []; } }
+function record(verdict, expected, got){
+  var row = {
+    t:new Date().toISOString(), job:current.job, item:current.item,
+    cust:current.customer||"", exp:expected, got:got, v:verdict
+  };
+  var rows = readLog();
+  rows.unshift(row);
+  store.set(KEY, JSON.stringify(rows.slice(0,500)));
+  renderLog();
+  if(window.PlateSync){ try { window.PlateSync.send(row); } catch(e){} }
+}
+function renderLog(){
+  var rows = readLog(), host = $("logBody");
+  if(!rows.length){ host.innerHTML = '<p class="empty">No checks recorded yet.</p>'; return; }
+  var html = '<table><thead><tr><th>Time</th><th>Job #</th><th>Item #</th><th>On proof</th><th>Codes</th><th>Result</th></tr></thead><tbody>';
+  rows.slice(0,25).forEach(function(r){
+    var d = new Date(r.t);
+    var when = d.toLocaleDateString([], {month:"numeric",day:"numeric"}) + " " +
+               d.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+    var lbl = r.v==="go" ? "MATCH" : (r.v==="stop" ? "STOP" : "REVIEW");
+    html += "<tr><td>"+esc(when)+"</td><td class='c'>"+esc(r.job)+"</td><td class='c'>"+esc(r.item||"")+
+            "</td><td class='c'>"+esc(r.exp)+"</td><td class='c'>"+esc(r.got)+
+            "</td><td><span class='tag "+r.v+"'>"+lbl+"</span></td></tr>";
+  });
+  host.innerHTML = html + "</tbody></table>";
+  if(rows.length > 25){
+    host.innerHTML += '<p class="empty" style="margin-top:10px">Showing 25 most recent of '+rows.length+'. Export to CSV for the full log.</p>';
+  }
+}
+$("csv").addEventListener("click", function(){
+  var rows = readLog();
+  if(!rows.length) return;
+  var out = "timestamp,job,item,customer,items_on_proof,artwork_codes,result\n";
+  rows.forEach(function(r){
+    out += [r.t,r.job,r.item||"",r.cust,r.exp,r.got,r.v].map(function(v){
+      return '"' + String(v==null?"":v).replace(/"/g,'""') + '"';
+    }).join(",") + "\n";
+  });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([out],{type:"text/csv"}));
+  a.download = "plate-check-" + new Date().toISOString().slice(0,10) + ".csv";
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+});
+
+document.addEventListener("platesync", function(e){
+  var el = $("qbadge");
+  if(!el) return;
+  el.textContent = e.detail.queued ? (e.detail.queued + " waiting to sync") : "";
+  el.hidden = !e.detail.queued;
+});
+
+renderLog();
+
+/* ---------------- self-check ---------------- */
+(function(){
+  var host = $("diagList"), panel = $("diag"), bad = false;
+  function row(state, text){
+    var li = document.createElement("li");
+    li.className = state;
+    li.innerHTML = "<span>" + (state==="ok" ? "\u2713" : state==="bad" ? "\u2717" : "!") +
+                   "</span><span>" + esc(text) + "</span>";
+    host.appendChild(li);
+    if(state === "bad") bad = true;
+  }
+
+  // 1. how the page was opened
+  var p = location.protocol;
+  if(p === "file:"){
+    row("bad","Opened as a local file (file://). The item table cannot load and the reader may be "+
+              "blocked. Serve the page over http:// or https:// \u2014 GitHub Pages works.");
+  } else {
+    row("ok","Served over " + p.replace(":","") + " \u2014 correct.");
+  }
+
+  // 2. item table
+  fetch("items.json",{cache:"no-store"}).then(function(r){
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  }).then(function(rows){
+    row("ok","Item table loaded (" + rows.length + " items).");
+  }).catch(function(e){
+    row("warn","Item table not loaded (" + e.message + "). The app still runs; item numbers "+
+               "will not resolve to an expected artwork code.");
+  });
+
+  // 3. OCR engine
+  if(typeof Tesseract === "undefined"){
+    row("bad","Text reader did not load from the CDN. Check the shop network, firewall, or "+
+              "content blockers, then reload.");
+  } else {
+    row("ok","Text reader present.");
+  }
+
+  // 4. comparison engine
+  row(window.PlateCompare ? "ok" : "bad",
+      window.PlateCompare ? "Comparison engine present."
+                          : "compare.js did not load \u2014 confirm it sits next to index.html.");
+
+  // 5. camera capture support
+  var fi = document.createElement("input");
+  fi.type = "file";
+  row(("capture" in fi) ? "ok" : "warn",
+      ("capture" in fi) ? "Camera capture supported."
+                        : "This browser may open the photo library instead of the camera.");
+
+  // 6. canvas ceiling (iPadOS caps total canvas area)
+  try {
+    var c = document.createElement("canvas");
+    c.width = 2000; c.height = 1500;
+    var g = c.getContext("2d");
+    g.fillRect(0,0,1,1);
+    row(g.getImageData(0,0,1,1).data[3] === 255 ? "ok" : "bad",
+        "Canvas of 2000\u00d71500 works.");
+  } catch(e){
+    row("bad","Canvas test failed: " + e.message);
+  }
+
+  if(bad){ panel.setAttribute("data-bad","1"); panel.open = true; }
+})();
+})();
+</script>
+</body>
+</html>
