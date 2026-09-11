@@ -13,6 +13,7 @@ Runs entirely in the browser. No server, no build step, no install.
 1. Create a repository (public or private — Pages works with private repos on paid plans).
 2. Commit these three files to the repository root:
    - `index.html`
+   - `barcodes.js`
    - `pipeline.js`
    - `bubbles.js`
    - `copycheck.js`
@@ -30,6 +31,20 @@ Do not open `index.html` by double-clicking it from a folder. Browsers block `fe
 `https://` — GitHub Pages, or `python3 -m http.server` for local testing.
 
 ---
+
+## Job ticket barcodes
+
+Step 1 is a photo of the job ticket. The Job # and Item Code barcodes are read automatically and
+the operator only confirms. Measured on a real ticket: the job is a Code 39 barcode carrying the
+six-digit job number; the item is a Code 128 barcode carrying the item code followed by a
+`TICKET` keyword and a tab (a scanner-form suffix, stripped on read). The StepNum barcodes at the
+bottom are recognised and ignored. Either orientation works; a glare streak across a barcode is
+usually survived. If a barcode does not read, its field is left for typing and the printed record
+notes that the numbers were typed or edited rather than scanned.
+
+`barcodes.js` locates candidate regions first (dense in edges across the bars, sparse along them)
+and decodes tight crops with ZXing, trying several working sizes per candidate because 1D decoding
+is sensitive to resampling. The ZXing browser build loads from jsDelivr like Tesseract does.
 
 ## Taking the photos
 

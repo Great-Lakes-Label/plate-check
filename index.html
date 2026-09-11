@@ -58,6 +58,12 @@
     padding:14px 12px;border:2px solid var(--steel);border-radius:6px;background:#fff;color:var(--ink)}
   input[type=text]:focus{outline:3px solid var(--gll);outline-offset:1px;border-color:var(--gll)}
   .sub-help{font-size:12px;color:var(--slate);margin:6px 0 0;line-height:1.4}
+  .readout{margin-top:16px;background:var(--card);border-left:4px solid var(--gll);padding:14px 14px 12px}
+  .ro-row{margin:0 0 12px}
+  .ro-row input[type=text]{background:#fff}
+  .ro-row input.fromcode{border-color:var(--go)}
+  .ro-row input.missing{border-color:var(--hold)}
+  .readout .btn-submit{margin-top:6px}
 
   button{font-family:inherit;cursor:pointer;border:0;border-radius:6px}
   button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
@@ -129,6 +135,11 @@
   .bub canvas{display:block;width:100%;border:1px solid var(--steel);border-radius:3px;background:#fff}
   .bub .sc{font-family:var(--mono);font-size:10px;color:var(--slate);margin:6px 0 0}
 
+  .diagout{border-top:1px solid var(--steel);padding:14px 18px 24px;font-size:13px}
+  .diagout summary{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);cursor:pointer;margin-bottom:10px}
+  .diagout pre{font-family:var(--mono);font-size:10.5px;line-height:1.45;background:var(--card);border:1px solid var(--steel);
+               border-radius:6px;padding:10px;white-space:pre-wrap;word-break:break-word;max-height:360px;overflow:auto;margin:0}
+
   /* ---------- printable record ---------- */
   #report{display:none}
   @media print{
@@ -179,13 +190,31 @@
 
   <!-- STEP 1 -->
   <section class="step" id="s1">
-    <p class="eyebrow">Step 1 <b>&mdash; Job</b></p>
-    <label class="fld" for="job">Job #</label>
-    <input type="text" id="job" inputmode="numeric" autocomplete="off" placeholder="Enter Job #">
-    <label class="fld" for="item" style="margin-top:16px">Item #</label>
-    <input type="text" id="item" inputmode="numeric" autocomplete="off" placeholder="Enter Item #" aria-describedby="itemhelp">
-    <p class="sub-help" id="itemhelp">The Product Number in the Art Proof Approval section</p>
-    <button class="btn-submit" id="submit">Submit</button>
+    <p class="eyebrow">Step 1 <b>&mdash; Job ticket</b></p>
+    <p class="lead">Photograph the job ticket</p>
+    <p class="how">Whole ticket in frame, any orientation. The Job # and Item Code barcodes are read automatically.</p>
+    <button class="btn-act hot" id="shootTicket">Photograph ticket</button>
+    <input type="file" id="fileTicket" accept="image/*" capture="environment" class="sr">
+    <div class="thumb" id="thumbTicket">
+      <canvas id="cvTicket"></canvas>
+      <p class="cap" id="capTicket"></p>
+    </div>
+
+    <div class="readout" id="readout" hidden>
+      <div class="ro-row">
+        <label class="fld" for="job">Job #</label>
+        <input type="text" id="job" inputmode="numeric" autocomplete="off" placeholder="Not read &mdash; type it">
+      </div>
+      <div class="ro-row">
+        <label class="fld" for="item">Item #</label>
+        <input type="text" id="item" inputmode="numeric" autocomplete="off" placeholder="Not read &mdash; type it">
+      </div>
+      <button class="btn-submit" id="submit">Confirm and continue</button>
+      <p class="sub-help">Both numbers came from the ticket barcodes. Correct either one if it is wrong, or type it if it was not read.</p>
+    </div>
+    <div class="tools" style="margin-top:12px">
+      <button class="btn-min" id="manual">Type the numbers instead</button>
+    </div>
     <p class="note" id="jobmsg"></p>
   </section>
 
@@ -255,6 +284,14 @@
     <p class="disclaim" id="disclaim">Wording only. Layout, print quality, registration and colour are not evaluated.</p>
   </section>
 
+  <!-- DIAGNOSTICS (closed by default; for troubleshooting with support) -->
+  <details id="diagOut" class="diagout" hidden>
+    <summary>Diagnostics &mdash; copy and send if a result looks wrong</summary>
+    <div class="tools" style="margin:0 0 10px"><button class="btn-min" id="copyDiag">Copy diagnostics</button>
+      <span class="sub-help" id="copyMsg" style="margin:0 0 0 8px"></span></div>
+    <pre id="diagText"></pre>
+  </details>
+
   <!-- PRINT REPORT -->
   <section id="report" aria-hidden="true">
     <div class="rpt-head">
@@ -263,7 +300,7 @@
     </div>
     <table class="rpt-meta">
       <tr><th>Job #</th><td id="rJob">&mdash;</td><th>Item #</th><td id="rItem">&mdash;</td></tr>
-      <tr><th>Customer</th><td id="rCust" colspan="3">&mdash;</td></tr>
+      <tr><th>Customer</th><td id="rCust">&mdash;</td><th>Numbers from</th><td id="rSrc">&mdash;</td></tr>
       <tr><th>Checked</th><td id="rWhen">&mdash;</td><th>Item # on proof</th><td id="rOnProof">&mdash;</td></tr>
     </table>
     <p class="rpt-detail" id="rDetail"></p>
@@ -297,17 +334,19 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="pipeline.js?v=2026-09-02.10"></script>
-<script src="bubbles.js?v=2026-09-02.10"></script>
-<script src="copycheck.js?v=2026-09-02.10"></script>
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21/umd/index.min.js"></script>
+<script src="barcodes.js?v=2026-09-11.1"></script>
+<script src="pipeline.js?v=2026-09-11.1"></script>
+<script src="bubbles.js?v=2026-09-11.1"></script>
+<script src="copycheck.js?v=2026-09-11.1"></script>
 <!-- Uncomment only for MODE "graph" in sync.js -->
 <!-- <script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script> -->
-<script src="sync.js?v=2026-09-02.10"></script>
+<script src="sync.js?v=2026-09-11.1"></script>
 <script>
 (function(){
 "use strict";
 
-var APP_VERSION = "2026-09-02.10";   /* bump on every deploy; shown in the header and self-check */
+var APP_VERSION = "2026-09-11.1";   /* bump on every deploy; shown in the header and self-check */
 var TESS = {
   workerPath: "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js",
   corePath:   "https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.0",
@@ -316,9 +355,11 @@ var TESS = {
 var $ = function(id){ return document.getElementById(id); };
 
 var items = {}, current = null, busy = false;
-var proof = { img:null, words:null, onSheet:[], box:null };
-var press = { img:null, words:null, box:null };
+var ticket = { img:null, scan:null };
+var proof = { img:null, words:null, onSheet:[], box:null, meta:null };
+var press = { img:null, words:null, box:null, meta:null };
 var bubbles = null;
+var diag = { proofRes:null, pressRes:null, errors:[] };
 var result = null;
 
 function digitsOnly(s){ return (s||"").replace(/\D/g,""); }
@@ -337,14 +378,62 @@ fetch("items.json",{cache:"no-store"})
   .then(function(rows){ rows.forEach(function(r){ var k=digitsOnly(r.item); if(k) items[k]=r; }); })
   .catch(function(){});
 
-/* ================= STEP 1 ================= */
+/* ================= STEP 1: job ticket ================= */
+$("shootTicket").addEventListener("click", function(){ $("fileTicket").click(); });
+$("manual").addEventListener("click", function(){
+  $("readout").hidden = false;
+  $("job").className = ""; $("item").className = "";
+  $("job").value = ""; $("item").value = "";
+  note("jobmsg","Type the Job # and the Item # from the Art Proof Approval, then confirm.","");
+  $("job").focus();
+});
+$("fileTicket").addEventListener("change", function(e){
+  var f = e.target.files && e.target.files[0]; e.target.value = "";
+  if(!f || busy) return;
+  busy = true; hideSlab(); resetDownstream();
+  progress("Loading photo", 0.05);
+  window.PlatePipeline.loadOriented(f).then(function(img){
+    ticket.img = img;
+    thumb("cvTicket", img, null);
+    $("thumbTicket").classList.add("on");
+    $("capTicket").textContent = "Reading barcodes…";
+    progress("Reading barcodes", 0.4);
+    return new Promise(function(done){ setTimeout(function(){ done(window.BarcodeRead.scan(img)); }, 30); });
+  }).then(function(scan){
+    ticket.scan = scan;
+    $("shootTicket").classList.remove("hot");
+    $("readout").hidden = false;
+    $("job").value  = scan.job  || "";
+    $("item").value = scan.item || "";
+    $("job").className  = scan.job  ? "fromcode" : "missing";
+    $("item").className = scan.item ? "fromcode" : "missing";
+    var got = (scan.job?1:0) + (scan.item?1:0);
+    $("capTicket").textContent = got===2 ? "Both barcodes read" : got===1 ? "One barcode read" : "No barcodes read";
+    if(got === 2){
+      note("jobmsg", "Job " + scan.job + ", item " + scan.item + " read from the ticket. Confirm to continue.", "good");
+      $("submit").focus();
+    } else if(got === 1){
+      note("jobmsg", (scan.job ? "Job # read; the Item Code barcode was not. " : "Item Code read; the Job # barcode was not. ") +
+                     "Retake with the ticket flat and both barcodes clear of glare, or type the missing one.", "warn");
+      (scan.job ? $("item") : $("job")).focus();
+    } else {
+      note("jobmsg", "No barcodes could be read (" + scan.candidates + " candidate regions). Retake with the whole ticket flat and in frame, or type both numbers.", "warn");
+    }
+  }).catch(function(err){
+    diag.errors.push("ticket: " + (err && (err.stack||err.message) || err));
+    note("jobmsg", "The ticket could not be processed: " + (err.message||"error") + ". Retake it or type the numbers.", "warn");
+    $("readout").hidden = false;
+  }).then(function(){ busy = false; progressOff(); });
+});
+
 function submitJob(){
   var job = $("job").value.trim(), item = $("item").value.trim(), ik = digitsOnly(item);
   if(!job){ note("jobmsg","Enter the Job #.","warn"); $("job").focus(); return; }
   if(ik.length !== 9){ note("jobmsg","Enter the full Item # as shown in the Art Proof Approval, e.g. 10-9813960.","warn"); $("item").focus(); return; }
   note("jobmsg","");
   var rec = items[ik] || {};
-  current = { job:job, item:fmtItem(ik), itemDigits:ik, descriptor:rec.descriptor||"", customer:rec.customer||"" };
+  current = { job:job, item:fmtItem(ik), itemDigits:ik, descriptor:rec.descriptor||"", customer:rec.customer||"",
+              source: ticket.scan ? ((ticket.scan.job===job && ticket.scan.item===fmtItem(ik)) ? "barcode" : "barcode+edited") : "typed" };
   $("s2").classList.remove("locked");
   $("shootProof").disabled = false; $("shootProof").classList.add("hot");
   hideSlab();
@@ -353,12 +442,14 @@ function submitJob(){
 $("submit").addEventListener("click", submitJob);
 $("job").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); $("item").focus(); }});
 $("item").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); submitJob(); }});
-$("job").addEventListener("input", resetAll);
-$("item").addEventListener("input", resetAll);
+$("job").addEventListener("input", resetDownstream);
+$("item").addEventListener("input", resetDownstream);
 
-function resetAll(){
+/* everything after step 1 */
+function resetDownstream(){
   current = null; result = null;
-  proof = { img:null, words:null, onSheet:[], box:null }; press = { img:null, words:null, box:null }; bubbles = null;
+  proof = { img:null, words:null, onSheet:[], box:null, meta:null }; press = { img:null, words:null, box:null, meta:null }; bubbles = null;
+  diag = { proofRes:null, pressRes:null, errors:[] }; $("diagOut").hidden = true;
   $("findings").hidden = true;
   $("s2").classList.add("locked"); $("s3").classList.add("locked");
   $("shootProof").disabled = true; $("shootProof").classList.remove("hot");
@@ -366,6 +457,16 @@ function resetAll(){
   $("thumbProof").classList.remove("on"); $("thumbPress").classList.remove("on");
   note("proofmsg",""); note("pressmsg","");
   hideSlab();
+}
+
+function resetAll(){
+  ticket = { img:null, scan:null };
+  $("thumbTicket").classList.remove("on");
+  $("readout").hidden = true;
+  $("job").value = ""; $("item").value = ""; $("job").className = ""; $("item").className = "";
+  $("shootTicket").classList.add("hot");
+  note("jobmsg","");
+  resetDownstream();
 }
 
 /* ================= thumbnails ================= */
@@ -403,8 +504,10 @@ $("fileProof").addEventListener("change", function(e){
     });
   }).then(function(res){
     proof.onSheet = res.onSheet;
+    diag.proofRes = res;
     if(!res.found){
       proof.words = null;
+      writeDiag("proof only");
       $("capProof").textContent = "Item number is not a Product Number on this sheet.";
       note("proofmsg", res.onSheet.length
         ? "The Art Proof Approval on this sheet lists " + res.onSheet.map(fmtItem).join(" and ") + ", not " + current.item + ". Confirm you have the right proof."
@@ -418,7 +521,7 @@ $("fileProof").addEventListener("change", function(e){
       note("proofmsg", "Item " + current.item + " is on the approval, but no artwork could be located on the sheet. Retake with the whole sheet flat and in frame.", "warn");
       return;
     }
-    proof.words = res.words; proof.box = res.box;
+    proof.words = res.words; proof.box = res.box; diag.proofRes = res;
     thumb("cvProof", proof.img, res.box);
     $("capProof").textContent = "Artwork " + (res.blockIndex+1) + " of " + res.artworks + " located · " + res.words.length + " words read";
     note("proofmsg", "Item " + current.item + " matches Product Number on approval block " + (res.blockIndex+1) +
@@ -427,6 +530,7 @@ $("fileProof").addEventListener("change", function(e){
     $("shootPress").disabled = false; $("shootPress").classList.add("hot");
     $("s3").scrollIntoView({behavior:"smooth", block:"start"});
   }).catch(function(err){
+    diag.errors.push("proof: " + (err && (err.stack||err.message) || err)); writeDiag("proof error");
     note("proofmsg", "The proof could not be processed: " + (err.message||"reader error") + ". Retake it.", "warn");
   }).then(function(){ busy = false; progressOff(); });
 });
@@ -462,11 +566,12 @@ $("filePress").addEventListener("change", function(e){
       note("pressmsg","This photo shows more than one label. Photograph a single label filling the frame, on a dark flat surface, and try again.","warn");
       return;
     }
-    press.words = res.words; press.box = res.box;
+    press.words = res.words; press.box = res.box; diag.pressRes = res;
     thumb("cvPress", press.img, res.box.whole ? null : res.box);
     $("capPress").textContent = (res.box.whole ? "Whole photo used" : "Label located") + " · " + res.words.length + " words read";
     decide();
   }).catch(function(err){
+    diag.errors.push("press: " + (err && (err.stack||err.message) || err)); writeDiag("press error");
     note("pressmsg", "The press sample could not be processed: " + (err.message||"reader error") + ". Retake it.", "warn");
   }).then(function(){ busy = false; progressOff(); });
 });
@@ -549,6 +654,7 @@ function decide(){
   showFindings(r);
   showBubbles(bubbles);
   fillReport(verdict, r);
+  writeDiag("complete");
   record(verdict, r.unreadable ? "" : n);
   s.scrollIntoView({behavior:"smooth", block:"center"});
 }
@@ -595,10 +701,52 @@ function showBubbles(b){
 function blank(){ var c = document.createElement("canvas"); c.width=140; c.height=100; return c; }
 function hideSlab(){ $("slab").className = "slab"; }
 
+/* ================= DIAGNOSTICS ================= */
+function fmtWords(ws){
+  if(!ws) return "(none)";
+  return ws.map(function(t){ return t.text + "@" + Math.round(t.confidence) + (t.alts && t.alts.length>1 ? "{" + t.alts.slice(0,3).join("|") + "}" : ""); }).join(" ");
+}
+function fmtBox(b){ return b ? [b.x,b.y,b.w,b.h].map(function(v){ return Math.round(v); }).join(",") : "—"; }
+function writeDiag(stage){
+  var L = [];
+  L.push("PLATE CHECK DIAGNOSTICS  v" + APP_VERSION + "  " + new Date().toISOString() + "  stage=" + stage);
+  L.push("UA: " + navigator.userAgent);
+  L.push("job=" + (current&&current.job) + "  item=" + (current&&current.item) + "  source=" + (current&&current.source));
+  if(ticket.scan) L.push("TICKET " + (ticket.img?ticket.img.w+"x"+ticket.img.h:"") + "  candidates=" + ticket.scan.candidates + "  reads=" + JSON.stringify(ticket.scan.reads.map(function(r){return r.format+":"+r.text;})) + "  " + ticket.scan.ms + "ms");
+  var pr = diag.proofRes;
+  L.push("");
+  L.push("PROOF photo " + (proof.img ? proof.img.w + "x" + proof.img.h : "—") +
+         "  found=" + (pr?pr.found:"—") + "  blocks=" + (pr?pr.blocks:"—") + "  onSheet=" + (pr&&pr.onSheet?pr.onSheet.join(","):"—") +
+         "  blockIndex=" + (pr?pr.blockIndex:"—") + "  artworks=" + (pr?pr.artworks:"—") + "  box=" + fmtBox(proof.box));
+  L.push("PROOF words (" + (proof.words?proof.words.length:0) + "): " + fmtWords(proof.words));
+  var ps = diag.pressRes;
+  L.push("");
+  L.push("PRESS photo " + (press.img ? press.img.w + "x" + press.img.h : "—") +
+         "  multi=" + (ps?ps.multi:"—") + "  whole=" + (ps&&ps.box?ps.box.whole:"—") + "  box=" + fmtBox(press.box));
+  L.push("PRESS words (" + (press.words?press.words.length:0) + "): " + fmtWords(press.words));
+  L.push("");
+  if(bubbles){
+    L.push("CALLOUTS proof=" + bubbles.proofCount + " press=" + bubbles.pressCount + "  " +
+      bubbles.bubbles.map(function(e,i){ return (i+1)+":"+e.status+(e.score!=null?"("+e.score.toFixed(3)+")":""); }).join("  "));
+  } else L.push("CALLOUTS: not run");
+  if(result){
+    L.push("COPY unreadable=" + result.unreadable + " matched=" + result.matched + " unverified=" + result.unverified +
+           " coverage=" + Math.round((result.coverage||0)*100) + "%  findings=" + result.findings.length);
+    result.findings.forEach(function(f){ L.push("  [" + f.kind + "] " + (f.proof||"—") + "  ->  " + (f.press||"—")); });
+  } else L.push("COPY: not run");
+  if(diag.errors.length){ L.push(""); L.push("ERRORS:"); diag.errors.forEach(function(e){ L.push("  " + e); }); }
+  $("diagText").textContent = L.join("\n");
+  $("diagOut").hidden = false;
+}
+$("copyDiag").addEventListener("click", function(){
+  var t = $("diagText").textContent;
+  function done(ok){ $("copyMsg").textContent = ok ? "Copied — paste it into the chat." : "Could not copy; long-press the text to select it."; }
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(function(){ done(true); }, function(){ done(false); }); }
+  else done(false);
+});
+
 $("next").addEventListener("click", function(){
-  $("job").value = ""; $("item").value = "";
-  resetAll(); note("jobmsg","");
-  $("job").focus();
+  resetAll();
   $("s1").scrollIntoView({behavior:"smooth", block:"start"});
 });
 
@@ -610,6 +758,7 @@ function fillReport(verdict, r){
   $("rJob").textContent = current.job;
   $("rItem").textContent = current.item;
   $("rCust").textContent = current.customer || "—";
+  $("rSrc").textContent = current.source === "barcode" ? "ticket barcodes" : current.source === "barcode+edited" ? "ticket barcodes, edited" : "typed";
   $("rWhen").textContent = now.toLocaleDateString() + "  " + now.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
   $("rOnProof").textContent = proof.onSheet.length ? proof.onSheet.map(fmtItem).join(", ") : "not read";
   $("rDetail").textContent = $("sub").textContent;
@@ -656,6 +805,8 @@ $("ver").textContent = "v" + APP_VERSION;
     .then(function(rows){ row("ok","Item table loaded (" + rows.length + " items)."); })
     .catch(function(e){ row("warn","Item table not loaded (" + e.message + "). Descriptor and customer will show blank."); });
   row(typeof Tesseract !== "undefined" ? "ok" : "bad", typeof Tesseract !== "undefined" ? "Text reader present." : "Text reader did not load from the CDN.");
+  row(window.ZXing ? "ok" : "bad", window.ZXing ? "Barcode library present." : "Barcode library did not load from the CDN — the ticket step will need typing.");
+  row(window.BarcodeRead ? "ok" : "bad", window.BarcodeRead ? "Barcode reader present." : "barcodes.js did not load — confirm it sits next to index.html.");
   row(window.PlatePipeline ? "ok" : "bad", window.PlatePipeline ? "Image pipeline present." : "pipeline.js did not load — confirm it sits next to index.html.");
   row(window.CopyCheck ? "ok" : "bad", window.CopyCheck ? "Copy-check engine present." : "copycheck.js did not load — confirm it sits next to index.html.");
   row(window.BubbleCheck ? "ok" : "warn", window.BubbleCheck ? "Callout comparison present." : "bubbles.js did not load — nutrition callouts will not be compared.");
